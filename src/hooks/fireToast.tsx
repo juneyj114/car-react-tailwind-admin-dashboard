@@ -8,7 +8,7 @@ const createToast=(title: string, msg: string, type: number)=>{toast.custom((t) 
       className={`${
         t.visible ? 'animate-enter' : 'animate-leave'
       }
-      max-w-md w-full ${type=='0'?"bg-[#04b20c]":type=='1'?"bg-[#eab90f]":"bg-[#e13f32]"} shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
+      max-w-md w-full ${type == 0 ?"bg-[#04b20c]":type == 1?"bg-[#eab90f]":"bg-[#e13f32]"} shadow-lg rounded-lg pointer-events-auto flex ring-1 ring-black ring-opacity-5`}
     >
       <div className="flex-1 w-0 p-4 ">
         <div className="flex items-start">
@@ -71,11 +71,11 @@ if (alertSettings){
     console.log(alertSetting);
 
     const value=isNaN(parseFloat(alertSetting.value))?alertSetting.value:parseFloat(alertSetting.value);
-    const para=alertSetting.criterion<2?"delta_"+alertSetting.para:alertSetting.para;
+    const para = alertSetting.criterion<2?"delta_"+alertSetting.para:alertSetting.para;
     if (alertSetting.id=="ALL"){
       Object.keys(dataJSON).map((id:string)=>
       {
-        const condition=alertSetting.criterion=='0'?value<=-1*dataJSON[id][para]:
+        const condition=alertSetting.criterion=='0'?value<=-1* dataJSON[id][para]:
         alertSetting.criterion=='1'||alertSetting.criterion=='3'?value>=dataJSON[id][para]:
         alertSetting.criterion=='2'?value<=dataJSON[id][para]:
         value==dataJSON[id][para];
@@ -84,10 +84,7 @@ if (alertSettings){
           const msg=`${alertSetting.para} of ${id} ${alertSetting.criterion==0?"goes down by":alertSetting.criterion==1?"goes up by":alertSetting.criterion==2?"is smaller than":alertSetting.criterion==3?"is greater than":"is equal to"} ${realValue}`;
           createToast(id,msg,alertSetting.type)
         }
-    
-
       }
-
       );
     }
     else{

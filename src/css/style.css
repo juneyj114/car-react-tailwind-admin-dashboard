@@ -1,10 +1,12 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
+    @apply relative z-1 bg-whiten font-satoshi text-base font-normal text-body;
   }
 }
 
@@ -36,7 +38,7 @@
   @apply opacity-100;
 }
 .tableCheckbox:checked ~ div {
-  @apply bg-primary border-primary;
+  @apply border-primary bg-primary;
 }
 
 .apexcharts-legend-text {
@@ -85,7 +87,7 @@
 }
 .flatpickr-months .flatpickr-prev-month:hover svg,
 .flatpickr-months .flatpickr-next-month:hover svg {
-  @apply !fill-primary;
+  @apply fill-primary;
 }
 .flatpickr-calendar.arrowTop:before {
   @apply dark:!border-b-boxdark;
@@ -167,10 +169,10 @@ span.flatpickr-weekday,
 }
 
 .map-btn .jvm-zoom-btn {
-  @apply flex items-center justify-center w-7.5 h-7.5 rounded border border-stroke dark:border-strokedark hover:border-primary dark:hover:border-primary bg-white hover:bg-primary text-body hover:text-white dark:text-bodydark dark:hover:text-white text-2xl leading-none px-0 pt-0 pb-0.5;
+  @apply flex h-7.5 w-7.5 items-center justify-center rounded border border-stroke bg-white px-0 pb-0.5 pt-0 text-2xl leading-none text-body hover:border-primary hover:bg-primary hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-bodydark dark:hover:border-primary dark:hover:bg-primary dark:hover:text-white;
 }
 .mapOne .jvm-zoom-btn {
-  @apply left-auto top-auto bottom-0;
+  @apply bottom-0 left-auto top-auto;
 }
 .mapOne .jvm-zoom-btn.jvm-zoomin {
   @apply right-10;
@@ -179,7 +181,7 @@ span.flatpickr-weekday,
   @apply right-0;
 }
 .mapTwo .jvm-zoom-btn {
-  @apply top-auto bottom-0;
+  @apply bottom-0 top-auto;
 }
 .mapTwo .jvm-zoom-btn.jvm-zoomin {
   @apply left-0;
@@ -195,7 +197,150 @@ span.flatpickr-weekday,
   @apply line-through;
 }
 .taskCheckbox:checked ~ .box {
-  @apply bg-primary border-primary dark:border-primary;
+  @apply border-primary bg-primary dark:border-primary;
+}
+
+.custom-input-date::-webkit-calendar-picker-indicator {
+  background: transparent;
+}
+
+.data-stats-slider-outer .swiper-button-next:after,
+.data-stats-slider-outer .swiper-button-prev:after,
+.carouselOne .swiper-button-next:after,
+.carouselOne .swiper-button-prev:after,
+.carouselThree .swiper-button-next:after,
+.carouselThree .swiper-button-prev:after {
+  @apply hidden;
+}
+.carouselOne .swiper-button-next,
+.carouselOne .swiper-button-prev,
+.carouselThree .swiper-button-next,
+.carouselThree .swiper-button-prev {
+  @apply h-12.5 w-12.5 rounded-full bg-white !text-body shadow-default dark:bg-meta-4 dark:!text-bodydark;
+}
+
+.data-stats-slider-outer .swiper-button-next,
+.data-stats-slider-outer .swiper-button-prev {
+  @apply top-1/2 h-11.5 w-11.5 rounded-full bg-white !text-black shadow-default dark:bg-meta-4 dark:!text-white;
+}
+.data-stats-slider-outer .swiper-button-next.swiper-button-disabled,
+.data-stats-slider-outer .swiper-button-prev.swiper-button-disabled {
+  @apply hidden;
+}
+.data-stats-slider-outer .swiper-button-prev {
+  @apply -left-[23px];
+}
+.data-stats-slider-outer .swiper-button-next {
+  @apply -right-[23px];
+}
+
+.carouselTwo .swiper-pagination-bullet,
+.carouselThree .swiper-pagination-bullet {
+  @apply h-[5px] w-7.5 rounded-none bg-white/50;
+}
+.carouselTwo .swiper-pagination-bullet-active,
+.carouselThree .swiper-pagination-bullet-active {
+  @apply bg-white;
+}
+.carouselTwo .swiper-pagination,
+.carouselThree .swiper-pagination {
+  @apply xl:!bottom-8;
+}
+
+.data-table-common .datatable-search {
+  @apply relative !ml-0 w-100 overflow-hidden rounded;
+}
+.data-table-one .datatable-search input {
+  @apply h-[46px] w-full rounded border border-stroke bg-transparent px-5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary;
+}
+.data-table-common .datatable-selector {
+  @apply relative z-20 inline-flex bg-transparent p-0 font-medium text-body outline-none dark:text-bodydark;
+}
+.data-table-common .datatable-top {
+  @apply flex flex-col gap-4 border-b border-stroke px-7.5 py-4.5 after:hidden dark:border-strokedark sm:flex-row-reverse sm:items-center sm:justify-between sm:gap-x-4 sm:gap-y-0;
+}
+.data-table-common .datatable-dropdown label {
+  @apply inline-flex items-center gap-2.5 font-medium capitalize text-black dark:text-white;
+}
+.datatable-table .datatable-sorter {
+  @apply before:hidden after:hidden;
+}
+.datatable-table > thead > tr:first-child > th {
+  @apply border-transparent px-2.5 pb-2.5 pt-9 font-medium;
+}
+.data-table-common .datatable-table > tbody > tr > td:first-child,
+.data-table-common .datatable-table > thead > tr > th:first-child {
+  @apply pl-8;
+}
+.data-table-common .datatable-table > tbody > tr > td:last-child,
+.data-table-common .datatable-table > thead > tr > th:last-child {
+  @apply pr-8;
+}
+.data-table-common .datatable-table > thead > tr:last-child > th {
+  @apply !border-b border-stroke pb-6 dark:border-strokedark;
+}
+.data-table-common .datatable-table > thead > tr:last-child > th input {
+  @apply h-[34px] w-full rounded border border-stroke bg-transparent px-3 text-sm outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary;
+}
+.data-table-common .datatable-table > tbody > tr {
+  @apply hover:bg-primary hover:bg-opacity-5;
+}
+.data-table-one .datatable-table > tbody > tr > td:first-child {
+  @apply text-primary dark:text-white;
+}
+.data-table-common .datatable-table > tbody > tr > td {
+  @apply border-b border-stroke py-5 font-medium dark:border-strokedark;
+}
+.data-table-one .datatable-bottom {
+  @apply flex flex-col gap-4 px-8 py-7 after:hidden sm:flex-row-reverse sm:items-center sm:justify-between sm:gap-0 sm:space-x-4;
+}
+.data-table-common .datatable-wrapper.no-footer .datatable-container {
+  @apply border-none;
+}
+.data-table-common .datatable-info {
+  @apply !m-0 font-medium;
+}
+.data-table-common .datatable-pagination {
+  @apply !m-0;
+}
+.data-table-common .datatable-pagination a {
+  @apply flex h-8 w-8 cursor-pointer items-center justify-center rounded p-0 font-medium text-body hover:bg-primary hover:text-white dark:text-bodydark;
+}
+.data-table-common .datatable-pagination .datatable-active a {
+  @apply bg-primary text-white;
+}
+.data-table-common .datatable-pagination li.datatable-hidden {
+  @apply !visible;
+}
+.data-table-two .datatable-bottom {
+  @apply flex flex-col gap-4 px-8 py-7 after:hidden sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:space-x-4;
+}
+.data-table-two .datatable-search input {
+  @apply h-11.5 w-full rounded border border-stroke bg-whiter px-5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary;
+}
+
+.rangeSliderCommon .noUi-target {
+  @apply border-none bg-transparent shadow-none;
+}
+.rangeSliderCommon .noUi-connects {
+  @apply h-1.5 rounded-full bg-stroke dark:bg-strokedark;
+}
+.rangeSliderCommon .noUi-connect {
+  @apply h-1.5 rounded-full bg-primary;
+}
+.rangeSliderOne .noUi-horizontal .noUi-handle {
+  @apply -top-2 h-5.5 w-5.5 rounded-full border-none bg-primary shadow-none;
+}
+.rangeSliderTwo .noUi-horizontal .noUi-handle {
+  @apply -top-2 h-6 w-6 rounded-full border-[6px] border-primary bg-white shadow-none dark:bg-black;
+}
+.noUi-horizontal .noUi-handle:after,
+.noUi-horizontal .noUi-handle:before {
+  @apply hidden;
+}
+
+input[type="search"]::-webkit-search-cancel-button {
+  @apply appearance-none;
 }
 
 .custom-input-date::-webkit-calendar-picker-indicator {

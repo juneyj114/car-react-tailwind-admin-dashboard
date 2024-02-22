@@ -84,18 +84,18 @@ const options: ApexOptions = {
   xaxis: {
     type: 'category',
     categories: [
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '10',
+      '11',
+      '12',
     ],
     axisBorder: {
       show: false,
@@ -126,12 +126,12 @@ const ChartOne: React.FC = () => {
   const [state, setState] = useState<ChartOneState>({
     series: [
       {
-        name: 'Product One',
+        name: '입차',
         data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45],
       },
 
       {
-        name: 'Product Two',
+        name: '출차',
         data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51],
       },
     ],
@@ -153,8 +153,8 @@ const ChartOne: React.FC = () => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
             </span>
             <div className="w-full">
-              <p className="font-semibold text-primary">Total Revenue</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              <p className="font-semibold text-primary">입차</p>
+              {/*<p className="text-sm font-medium">2024.01.01 - 2024.01.12</p>*/}
             </div>
           </div>
           <div className="flex min-w-47.5">
@@ -162,21 +162,21 @@ const ChartOne: React.FC = () => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
             </span>
             <div className="w-full">
-              <p className="font-semibold text-secondary">Total Sales</p>
-              <p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>
+              <p className="font-semibold text-secondary">출차</p>
+              {/*<p className="text-sm font-medium">12.04.2022 - 12.05.2022</p>*/}
             </div>
           </div>
         </div>
         <div className="flex w-full max-w-45 justify-end">
           <div className="inline-flex items-center rounded-md bg-whiter p-1.5 dark:bg-meta-4">
             <button className="rounded bg-white py-1 px-3 text-xs font-medium text-black shadow-card hover:bg-white hover:shadow-card dark:bg-boxdark dark:text-white dark:hover:bg-boxdark">
-              Day
+              일
             </button>
             <button className="rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-              Week
+              주
             </button>
             <button className="rounded py-1 px-3 text-xs font-medium text-black hover:bg-white hover:shadow-card dark:text-white dark:hover:bg-boxdark">
-              Month
+              월
             </button>
           </div>
         </div>
