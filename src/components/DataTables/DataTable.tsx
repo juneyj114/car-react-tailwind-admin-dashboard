@@ -4,252 +4,16 @@ import {
   useSortBy,
   useGlobalFilter,
   useFilters,
-  usePagination,
+  usePagination
 } from 'react-table';
 
-interface Employee {
-  name: string;
-  position: string;
-  office: string;
-  age: string;
-  startDate: string;
-  salary: string;
-}
+const DataTable = ({
+  column,
+  tableData,
+ }) => {
 
-const dataTwo: Employee[] = [
-  {
-    name: 'Brielle Kuphal',
-    position: 'Senior Javascript Developer',
-    office: 'Edinburgh',
-    age: '25',
-    startDate: '2012/03/29',
-    salary: '$433,060',
-  },
-  {
-    name: 'Barney Murray',
-    position: 'Senior Backend Developer',
-    office: 'amsterdam',
-    age: '29',
-    startDate: '2010/05/01',
-    salary: '$424,785',
-  },
-  {
-    name: 'Ressie Ruecker',
-    position: 'Senior Frontend Developer',
-    office: 'Jakarta',
-    age: '27',
-    startDate: '2013/07/01',
-    salary: '$785,210',
-  },
-  {
-    name: 'Teresa Mertz',
-    position: 'Senior Designer',
-    office: 'New Caledonia',
-    age: '25',
-    startDate: '2014/05/30',
-    salary: '$532,126',
-  },
-  {
-    name: 'Chelsey Hackett',
-    position: 'Product Manager',
-    office: 'NewYork',
-    age: '26',
-    startDate: '2011/09/30',
-    salary: '$421,541',
-  },
-  {
-    name: 'Tatyana Metz',
-    position: 'Senior Product Manager',
-    office: 'NewYork',
-    age: '28',
-    startDate: '2009/09/30',
-    salary: '$852,541',
-  },
-  {
-    name: 'Oleta Harvey',
-    position: 'Junior Product Manager',
-    office: 'California',
-    age: '25',
-    startDate: '2015/10/30',
-    salary: '$654,444',
-  },
-  {
-    name: 'Bette Haag',
-    position: 'Junior Product Manager',
-    office: 'Carolina',
-    age: '29',
-    startDate: '2017/12/31',
-    salary: '$541,111',
-  },
-  {
-    name: 'Meda Ebert',
-    position: 'Junior Web Developer',
-    office: 'Amsterdam',
-    age: '27',
-    startDate: '2015/10/31',
-    salary: '$651,456',
-  },
-  {
-    name: 'Elissa Stroman',
-    position: 'Junior React Developer',
-    office: 'Kuala Lumpur',
-    age: '29',
-    startDate: '2008/05/31',
-    salary: '$566,123',
-  },
-  {
-    name: 'Sid Swaniawski',
-    position: 'Senior React Developer',
-    office: 'Las Vegas',
-    age: '29',
-    startDate: '2009/09/01',
-    salary: '$852,456',
-  },
-  {
-    name: 'Madonna Hahn',
-    position: 'Senior Vue Developer',
-    office: 'New York',
-    age: '27',
-    startDate: '2006/10/01',
-    salary: '$456,147',
-  },
-  {
-    name: 'Waylon Kihn',
-    position: 'Senior HTML Developer',
-    office: 'Amsterdam',
-    age: '23',
-    startDate: '2017/11/01',
-    salary: '$321,254',
-  },
-  {
-    name: 'Jaunita Lindgren',
-    position: 'Senior Backend Developer',
-    office: 'Jakarta',
-    age: '25',
-    startDate: '2018/12/01',
-    salary: '$321,254',
-  },
-  {
-    name: 'Lenora MacGyver',
-    position: 'Junior HTML Developer',
-    office: 'Carolina',
-    age: '27',
-    startDate: '2015/09/31',
-    salary: '$852,254',
-  },
-  {
-    name: 'Edyth McCullough',
-    position: 'Senior Javascript Developer',
-    office: 'Edinburgh',
-    age: '25',
-    startDate: '2012/03/29',
-    salary: '$433,060',
-  },
-  {
-    name: 'Ibrahim Stroman',
-    position: 'Senior Backend Developer',
-    office: 'amsterdam',
-    age: '29',
-    startDate: '2010/05/01',
-    salary: '$424,785',
-  },
-  {
-    name: 'Katelynn Reichert',
-    position: 'Senior Frontend Developer',
-    office: 'Jakarta',
-    age: '27',
-    startDate: '2013/07/01',
-    salary: '$785,210',
-  },
-  {
-    name: 'Logan Kiehn',
-    position: 'Senior Designer',
-    office: 'New Caledonia',
-    age: '25',
-    startDate: '2014/05/30',
-    salary: '$532,126',
-  },
-  {
-    name: 'Rogers Stanton',
-    position: 'Product Manager',
-    office: 'NewYork',
-    age: '26',
-    startDate: '2011/09/30',
-    salary: '$421,541',
-  },
-  {
-    name: 'Alanis Torp',
-    position: 'Senior Product Manager',
-    office: 'NewYork',
-    age: '28',
-    startDate: '2009/09/30',
-    salary: '$852,541',
-  },
-  {
-    name: 'Jarvis Bauch',
-    position: 'Junior Product Manager',
-    office: 'California',
-    age: '25',
-    startDate: '2015/10/30',
-    salary: '$654,444',
-  },
-  {
-    name: 'Trey Ritchie',
-    position: 'Junior Product Manager',
-    office: 'Carolina',
-    age: '29',
-    startDate: '2017/12/31',
-    salary: '$541,111',
-  },
-  {
-    name: 'Ronny Dietrich',
-    position: 'Junior Web Developer',
-    office: 'Amsterdam',
-    age: '27',
-    startDate: '2015/10/31',
-    salary: '$651,456',
-  },
-  {
-    name: 'Isabella Christiansen',
-    position: 'Junior React Developer',
-    office: 'Kuala Lumpur',
-    age: '29',
-    startDate: '2008/05/31',
-    salary: '$566,123',
-  },
-];
-
-// table header
-const column = [
-  {
-    Header: 'Name',
-    accessor: 'name',
-  },
-  {
-    Header: 'Position',
-    accessor: 'position',
-  },
-  {
-    Header: 'Office',
-    accessor: 'office',
-  },
-  {
-    Header: 'Age',
-    accessor: 'age',
-  },
-  {
-    Header: 'Start Date',
-    accessor: 'startDate',
-  },
-  {
-    Header: 'Salary',
-    accessor: 'salary',
-  },
-];
-
-const DataTableTwo = () => {
   const columns = useMemo(() => column, []);
-  const data = useMemo(() => dataTwo, []);
+  const data = useMemo(() => tableData, []);
 
   const tableInstance = useTable(
     {
@@ -266,7 +30,7 @@ const DataTableTwo = () => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page,
+    page ,
     prepareRow,
     state,
     setGlobalFilter,
@@ -306,7 +70,7 @@ const DataTableTwo = () => {
               </option>
             ))}
           </select>
-          <p className="pl-2 text-black dark:text-white">Entries Per Page</p>
+          {/*<p className="pl-2 text-black dark:text-white">목록수</p>*/}
         </div>
       </div>
 
@@ -380,7 +144,7 @@ const DataTableTwo = () => {
 
       <div className="flex justify-between border-t border-stroke px-8 pt-5 dark:border-strokedark">
         <p className="font-medium">
-          Showing {pageIndex + 1} 0f {pageOptions.length} pages
+          {pageIndex + 1} / {pageOptions.length} 페이지
         </p>
         <div className="flex">
           <button
@@ -442,4 +206,4 @@ const DataTableTwo = () => {
   );
 };
 
-export default DataTableTwo;
+export default DataTable;
