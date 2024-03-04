@@ -1,8 +1,7 @@
-import React from 'react';
 import DefaultLayout from '../../layout/DefaultLayout';
+import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb.tsx';
 import DataTable from '../../components/DataTables/DataTable.tsx';
 import SampleData from '../../common/sampleData.tsx';
-import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb.tsx';
 
 const Car: React.FC = () => {
   return (

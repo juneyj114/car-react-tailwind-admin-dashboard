@@ -105,7 +105,7 @@ function App() {
         />
 
         <Route
-          path="/car/unit"
+          path="/car-unit"
           element={
             <>
               <PageTitle title="세대별 차량 | Admin - Car Admin Apartment Unit Car" />
