@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { Link, useNavigate } from 'react-router-dom';
 
 const DropdownUser = () => {
+  const [, , removeCookie] = useCookies(['accessToken', 'refreshToken']);
+  const navigate = useNavigate();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   const trigger = useRef<any>(null);
@@ -32,6 +36,12 @@ const DropdownUser = () => {
     document.addEventListener('keydown', keyHandler);
     return () => document.removeEventListener('keydown', keyHandler);
   });
+
+  const logOut = () => {
+    removeCookie('accessToken', { path: '/' });
+    removeCookie('refreshToken', { path: '/' });
+    navigate("/auth/signin");
+  }
 
   return (
     <div className="relative">
@@ -153,10 +163,7 @@ const DropdownUser = () => {
         </ul>
         <button
           className="flex items-center gap-3.5 px-6 py-4 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
-          onClick={() => {
-            // /auth/signin route
-            window.location.href = '/auth/signin';
-          }}
+          onClick={logOut}
         >
           <svg
             className="fill-current"

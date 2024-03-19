@@ -1,10 +1,36 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-dark.svg';
 import Logo from '../../images/logo/logo.svg';
 import NoMenuLayout from '../../layout/NoMenuLayout.tsx';
+import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const SignIn: React.FC = () => {
+  const navigate = useNavigate();
+  const [userId, setuserId] = useState('');
+  const [password, setPassword] = useState('');
+  const [, setCookie] = useCookies(['accessToken', 'refreshToken']);
+
+
+  const onSubmit: React.FormEventHandler = async (e: React.ChangeEvent) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(import.meta.env.VITE_BASE_URL + import.meta.env.VITE_LOGIN_ENDPOINT, {
+        userId,
+        password,
+      });
+
+      setCookie('accessToken', response.data.accessToken, {path: "/"});
+      setCookie('refreshToken', response.data.refreshToken, {path: "/"});
+
+      navigate("/");
+    } catch (error) {
+      alert(error.response.data.detail);
+      console.error('로그인 실패:', error);
+    }
+  }
+
   return (
     <NoMenuLayout>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -32,7 +58,7 @@ const SignIn: React.FC = () => {
                 로그인
               </h2>
 
-              <form action={"/"}>
+              <form action={"/"} onSubmit={onSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     아이디
@@ -42,6 +68,8 @@ const SignIn: React.FC = () => {
                       type="text"
                       placeholder="아이디를 입력해주세요."
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={userId}
+                      onChange={(e) => setuserId(e.target.value)}
                     />
                   </div>
                 </div>
@@ -55,6 +83,8 @@ const SignIn: React.FC = () => {
                       type="password"
                       placeholder="비밀번호를 입력해주세요."
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
 
                     <span className="absolute right-4 top-4">

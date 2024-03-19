@@ -15,6 +15,7 @@ import CarLog from './pages/Log/CarLog.tsx';
 import CarEntryInsert from './pages/Log/CarEntryInsert.tsx';
 import ApartmentSetting from './pages/Setting/ApartmentSetting.tsx';
 import Profile from './pages/Profile.tsx';
+import { RecoilRoot } from 'recoil';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -31,7 +32,7 @@ function App() {
   return loading ? (
     <Loader />
   ) : (
-    <>
+    <RecoilRoot>
       <Routes>
 
         <Route
@@ -156,7 +157,7 @@ function App() {
         />
 
       </Routes>
-    </>
+    </RecoilRoot>
   );
 }
 

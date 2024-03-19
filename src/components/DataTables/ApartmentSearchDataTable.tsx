@@ -6,20 +6,18 @@ import {
   useFilters,
   usePagination
 } from 'react-table';
-import ModalDetails from '../Modals/ModalDetails';
-import ModalEdit from '../Modals/ModalEdit';
-import ModalDelete from '../Modals/ModalDelete';
+import { useSetRecoilState } from 'recoil';
+import { apartmentIdState } from '../../state/atoms/apartmentIdState';
+import { selectedApartmentNameState } from '../../state/atoms/selectedApartmentNameState';
 
-const DataTable = ({
+const ApartmentSearchDataTable = ({
   column,
   tableData,
-  hasDetailsMode = false,
-  detailsHandler = (id) => {},
-  hasEditMode = false,
-  editHandler = (id) => {},
-  hasDeleteMode = false,
-  deleteHandler = (id) => {}
+  apartemntClickHandler,
  }) => {
+
+  const setApartmentId = useSetRecoilState(apartmentIdState);
+  const setSelectedApartmentName = useSetRecoilState(selectedApartmentNameState);
 
   const columns = useMemo(() => column, []);
   const data = useMemo(() => tableData, []);
@@ -65,21 +63,6 @@ const DataTable = ({
             className="w-full rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary"
             placeholder="Search..."
           />
-        </div>
-
-        <div className="flex items-center font-medium">
-          <select
-            value={pageSize}
-            onChange={(e) => setPageSize(Number(e.target.value))}
-            className="bg-transparent pl-2"
-          >
-            {[5, 10, 20, 50].map((page) => (
-              <option key={page} value={page}>
-                {page}
-              </option>
-            ))}
-          </select>
-          {/*<p className="pl-2 text-black dark:text-white">목록수</p>*/}
         </div>
       </div>
 
@@ -130,29 +113,15 @@ const DataTable = ({
                   </div>
                 </th>
               ))}
-              {hasDetailsMode ? (
-                <th colSpan={1} role='columnheader' key={headerGroup.headers.length}>
-                    <span>상세</span>
-                </th>
-                ) : null}
-              {hasEditMode ? (
-                <th colSpan={1} role='columnheader' key={headerGroup.headers.length+1}>
-                    <span>수정</span>
-                </th>
-                ) : null}
-              {hasDeleteMode ? (
-                <th colSpan={1} role='columnheader' key={headerGroup.headers.length+2}>
-                    <span>삭제</span>
-                </th>
-                ) : null}
             </tr>
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
           {page.map((row, key) => {
             prepareRow(row);
+            // console.log(row);
             return (
-              <tr {...row.getRowProps()} key={key}>
+              <tr {...row.getRowProps()} key={key} className='cursor-pointer' onClick={(e) => {apartemntClickHandler(row.original['id'], row.original['name']);}}>
                 {row.cells.map((cell, key) => {
                   return (
                     <td {...cell.getCellProps()} key={key}>
@@ -160,21 +129,6 @@ const DataTable = ({
                     </td>
                   );
                 })}
-                {hasDetailsMode ? (
-                <td role='row' key={page.length} onClick={() => detailsHandler(row.original['id'])}>
-                  <ModalDetails/>
-                </td>
-                ) : null}
-                {hasEditMode ? (
-                <td role='row' key={page.length+1} onClick={() => editHandler(row.original['id'])}>
-                  <ModalEdit/>
-                </td>
-                ) : null}
-                {hasDeleteMode ? (
-                <td role='row' key={page.length+2}>
-                  <ModalDelete deleteHandler={deleteHandler} deleteData={row.cells} deleteId={row.original['id']}/>
-                </td>
-                ) : null}
               </tr>
             );
           })}
@@ -245,4 +199,4 @@ const DataTable = ({
   );
 };
 
-export default DataTable;
+export default ApartmentSearchDataTable;

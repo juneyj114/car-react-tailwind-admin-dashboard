@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import SelectGroupOne from '../../components/Forms/SelectGroup/SelectGroupOne';
+import SelectGroupOne from '../../components/Forms/SelectGroup/SelectGroup';
 import DefaultLayout from '../../layout/DefaultLayout';
 
 const ApartmentSetting = () => {

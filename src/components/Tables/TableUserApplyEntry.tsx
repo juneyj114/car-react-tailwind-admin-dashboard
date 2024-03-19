@@ -1,5 +1,6 @@
 import { ApplyEntry } from '../../types/applyEntry.ts';
 import { Link } from 'react-router-dom';
+import PaginationOne from '../Pagination/PaginationOne.tsx';
 
 const applyEntries: ApplyEntry[] = [
   {
@@ -20,30 +21,19 @@ const applyEntries: ApplyEntry[] = [
     vehicleNumber: '12가 1234',
     applyDate: '2021-10-01',
   },
-  {
-    dong: '101동',
-    ho: '101호',
-    vehicleNumber: '12가 1234',
-    applyDate: '2021-10-01',
-  },
-  {
-    dong: '101동',
-    ho: '101호',
-    vehicleNumber: '12가 1234',
-    applyDate: '2021-10-01',
-  },
+  
 ];
 
 const TableUserApplyEntry = () => {
   return (
-    <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+    <div className="text-sm rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white cursor-pointer">
         사용자 입출차 신청 내역
       </h4>
 
       <div className="flex flex-col">
-        <div className="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6">
-          <div className="p-2.5 text-center xl:p-5">
+        <div className="grid grid-cols-4 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
+          <div className="p-2.5 text-center xl:p-5 ">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
               동
             </h5>
@@ -65,19 +55,20 @@ const TableUserApplyEntry = () => {
           </div>
           <div className="p-2.5 text-center xl:p-5">
             <h5 className="text-sm font-medium uppercase xsm:text-base">
-
+              상태
             </h5>
           </div>
         </div>
 
         {applyEntries.map((applyEntry, key) => (
           <div
-            className={`grid grid-cols-4 sm:grid-cols-6 ${
+            className={`grid grid-cols-5 sm:grid-cols-5 hover:bg-slate-200 cursor-pointer ${
               key === applyEntries.length - 1
                 ? ''
                 : 'border-b border-stroke dark:border-strokedark'
             }`}
             key={key}
+            onClick={() => {console.log('신청 내역으로 이동');}}
           >
             <div className="flex items-center justify-center p-2.5 xl:p-5">
               {/*<div className="flex-shrink-0">*/}
@@ -96,32 +87,32 @@ const TableUserApplyEntry = () => {
               <p className="text-meta-3">{applyEntry.vehicleNumber}</p>
             </div>
 
-            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-5">
+            <div className="hidden items-center justify-center p-2.5 sm:flex xl:p-2.5">
               <p className="text-black dark:text-white">{applyEntry.applyDate}</p>
             </div>
 
-            <div className="flex items-center justify-center p-2.5 xl:p-5 ">
-              <Link
+            <div className="flex items-center justify-center p-3">
+              <p className='text-rose-500 font-bold'>승인대기중</p>
+              {/* <Link
                 to="#"
                 className="inline-flex items-center justify-center bg-primary py-2 px-5 text-center font-medium text-white "
               >
                 승인
-              </Link>
-            </div>
-
-            <div className="flex items-center justify-center p-2.5 xl:p-5 ">
+              </Link> */}
+              {/* <span className='p-2'></span>
               <Link
                 to="#"
                 className="inline-flex items-center justify-center bg-red py-2 px-5 text-center font-medium text-white "
               >
                 거절
-              </Link>
+              </Link> */}
             </div>
 
           </div>
 
         ))}
       </div>
+
     </div>
   );
 };

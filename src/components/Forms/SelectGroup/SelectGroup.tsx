@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-const SelectGroupOne: React.FC = () => {
+const SelectGroup = ({
+  selectGroupValues,
+  saveData,
+  setSaveData,
+  saveKey
+}) => {
   const [selectedOption, setSelectedOption] = useState<string>('');
   const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
 
@@ -8,36 +13,51 @@ const SelectGroupOne: React.FC = () => {
     setIsOptionSelected(true);
   };
 
+  const handleInputChange = (value) => {
+    const tempSaveData = saveData.map((data) => {
+      switch (data.key) {
+          case saveKey:
+              data = {...data, value: value};
+              break;
+          default:
+              break;
+      }
+      return data;
+    });
+    setSaveData(tempSaveData);
+  };
+
+  useEffect(() => {
+    saveData.forEach((data) => {
+      switch (data.key) {
+        case saveKey:
+          setSelectedOption(data.value);
+          break;
+        default:
+          break;
+      }
+    });
+  }, []);
+
   return (
     <div className="mb-4.5">
-      <label className="mb-2.5 block text-black dark:text-white">
-        {' '}
-        Subject{' '}
-      </label>
-
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
           value={selectedOption}
           onChange={(e) => {
             setSelectedOption(e.target.value);
             changeTextColor();
+            handleInputChange(e.target.value);
           }}
           className={`relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-5 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary ${
             isOptionSelected ? 'text-black dark:text-white' : ''
           }`}
         >
-          <option value="" disabled className="text-body dark:text-bodydark">
-            Select your subject
-          </option>
-          <option value="USA" className="text-body dark:text-bodydark">
-            USA
-          </option>
-          <option value="UK" className="text-body dark:text-bodydark">
-            UK
-          </option>
-          <option value="Canada" className="text-body dark:text-bodydark">
-            Canada
-          </option>
+          {selectGroupValues.map((value, index) => (
+            <option value={value.value} className="text-body dark:text-bodydark" key={index} defaultValue={selectedOption}>
+              {value.label}
+            </option>
+          ))}
         </select>
 
         <span className="absolute top-1/2 right-4 z-30 -translate-y-1/2">
@@ -64,4 +84,4 @@ const SelectGroupOne: React.FC = () => {
   );
 };
 
-export default SelectGroupOne;
+export default SelectGroup;
