@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Route, Routes, useLocation } from 'react-router-dom';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 import Loader from './common/Loader';
 import PageTitle from './components/PageTitle';
@@ -14,19 +14,33 @@ import ApartmentUnitCar from './pages/Car/ApartmentUnitCar.tsx';
 import CarLog from './pages/Log/CarLog.tsx';
 import CarEntryInsert from './pages/Log/CarEntryInsert.tsx';
 import ApartmentSetting from './pages/Setting/ApartmentSetting.tsx';
-import Profile from './pages/Profile.tsx';
+
 import { RecoilRoot } from 'recoil';
+import Member from './pages/Member/Member.tsx';
+import MemberRegister from './pages/Member/MemberRegister.tsx';
+import VehicleRegister from './pages/Car/VehicleRegister.tsx';
+import Notice from './pages/Notice/Notice.tsx';
+import Profile from './pages/Profile/Profile.tsx';
+import { useCookies } from 'react-cookie';
+import Support from './pages/Support/Support.tsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const { pathname } = useLocation();
+  const [cookies] = useCookies(['accessToken', 'refreshToken']);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    if (!cookies.accessToken && location.pathname != '/auth/signin' ) {
+      alert('로그인이 만료되었습니다. 로그인창으로 이동합니다.');
+      navigate('/auth/signin');
+    }
+    setLoading(false);
   }, []);
 
   return loading ? (
@@ -61,6 +75,16 @@ function App() {
             <>
               <PageTitle title="아파트 | Admin - Car Admin Apartment" />
               <Apartment />
+            </>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <>
+              <PageTitle title="아파트 | Admin - Car Admin Profile" />
+              <Profile />
             </>
           }
         />
@@ -115,6 +139,16 @@ function App() {
           }
         />
 
+        <Route
+          path="/car-register"
+          element={
+            <>
+              <PageTitle title="차량 승인신청 목록 | Admin - Car Admin Car Register" />
+              <VehicleRegister />
+            </>
+          }
+        />
+
 
         <Route
           path="/c/log"
@@ -137,6 +171,26 @@ function App() {
         />
 
         <Route
+          path="/member-register"
+          element={
+            <>
+              <PageTitle title="승인신청 목록 | Admin - Car Admin Member Register" />
+              <MemberRegister />
+            </>
+          }
+        />
+
+        <Route
+          path="/member"
+          element={
+            <>
+              <PageTitle title="사용자 관리 | Admin - Car Admin Member Management" />
+              <Member />
+            </>
+          }
+        />
+
+        <Route
           path="/setting"
           element={
             <>
@@ -152,6 +206,26 @@ function App() {
             <>
               <PageTitle title="내정보 | Admin - Car Admin Profile" />
               <Profile />
+            </>
+          }
+        />
+
+        <Route
+          path="/notice"
+          element={
+            <>
+              <PageTitle title="공지사항 | Admin - Car Admin Notice" />
+              <Notice />
+            </>
+          }
+        />
+
+        <Route
+          path="/support"
+          element={
+            <>
+              <PageTitle title="고객지원 | Support" />
+              <Support />
             </>
           }
         />

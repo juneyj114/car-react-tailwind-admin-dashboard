@@ -11,8 +11,8 @@ const NoMenuLayout: React.FC<{ children: ReactNode }> = ({ children }) => {
         <div className="relative flex flex-1 flex-col  overflow-y-hidden overflow-x-hidden">
 
           {/* <!-- ===== Main Content Start ===== --> */}
-          <main>
-            <div className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+          <main className=''>
+            <div className="mx-auto max-w-screen-2xl py-50">
               {children}
             </div>
           </main>

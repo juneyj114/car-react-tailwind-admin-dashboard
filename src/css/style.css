@@ -266,7 +266,7 @@ span.flatpickr-weekday,
   @apply before:hidden after:hidden;
 }
 .datatable-table > thead > tr:first-child > th {
-  @apply border-transparent px-2.5 pb-2.5 pt-9 font-medium;
+  @apply border-transparent px-2.5 pb-4 pt-4 font-medium;
 }
 .data-table-common .datatable-table > tbody > tr > td:first-child,
 .data-table-common .datatable-table > thead > tr > th:first-child {
@@ -277,7 +277,7 @@ span.flatpickr-weekday,
   @apply pr-8;
 }
 .data-table-common .datatable-table > thead > tr:last-child > th {
-  @apply !border-b border-stroke pb-6 dark:border-strokedark;
+  @apply !border-b border-stroke pb-4 dark:border-strokedark;
 }
 .data-table-common .datatable-table > thead > tr:last-child > th input {
   @apply h-[34px] w-full rounded border border-stroke bg-transparent px-3 text-sm outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary;

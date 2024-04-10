@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import CardDataStats from '../components/CardDataStats';
-import ChartOne from '../components/Charts/ChartOne';
-import ChartTwo from '../components/Charts/ChartTwo';
 import TableUserApplyEntry from '../components/Tables/TableUserApplyEntry.tsx';
 import DefaultLayout from '../layout/DefaultLayout';
 import ChartHour from '../components/Charts/ChartHour.tsx';
@@ -10,6 +8,7 @@ import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import { DashboardData } from '../types/dashboard.ts';
 import Loader from '../common/Loader/index.tsx';
+import TableCarApplyEntry from '../components/Tables/TableCarApplyEntry.tsx';
 
 const Dashboard: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -44,9 +43,9 @@ const Dashboard: React.FC = () => {
         <Loader />
       ) : (
         <>
-          <div className='grid grid-cols-2 gap-4 2xl:gap-7.5'>
-            <div className="grid-rows-2 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
-              <CardDataStats title="총 세대 / 등록차량대수" total={dashboardData.unitCount.toString()} rate="">
+          <div className='grid grid-cols-4 gap-4'>
+            {/* <div className="grid-rows-2 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5"> */}
+              <CardDataStats title="총 세대 / 등록차량 대수" total={`${dashboardData.unitCount.toString()} / ${dashboardData.vehicleCount.toString()}`} rate="">
                 <svg
                   className="fill-primary dark:fill-white"
                   width="22"
@@ -69,7 +68,7 @@ const Dashboard: React.FC = () => {
                   />
                 </svg>
               </CardDataStats>
-              <CardDataStats title="금일 방문차량" total={dashboardData.visitInCount.toString()} rate="">
+              <CardDataStats title="금일 방문차량 (금일 0시 이후)" total={dashboardData.visitInCount.toString()} rate="">
                 <svg
                   className="fill-primary dark:fill-white"
                   width="20"
@@ -92,7 +91,7 @@ const Dashboard: React.FC = () => {
                   />
                 </svg>
               </CardDataStats>
-              <CardDataStats title="입차 / 출차" total={`${dashboardData.inCount} / ${dashboardData.outCount}`} rate="">
+              <CardDataStats title="금일 입차 / 출차 대수" total={`${dashboardData.inCount} / ${dashboardData.outCount}`} rate="">
                 <svg
                   className="fill-primary dark:fill-white"
                   width="22"
@@ -115,7 +114,7 @@ const Dashboard: React.FC = () => {
                   />
                 </svg>
               </CardDataStats>
-              <CardDataStats title="앱 사용자수" total={dashboardData.userCount.toString()} rate="">
+              <CardDataStats title="앱 승인된 사용자수" total={dashboardData.userCount.toString()} rate="">
                 <svg
                   className="fill-primary dark:fill-white"
                   width="22"
@@ -138,11 +137,15 @@ const Dashboard: React.FC = () => {
                   />
                 </svg>
               </CardDataStats>
-            </div>
+            {/* </div> */}
+          </div>
+          <div className='mt-4 grid grid-cols-2 gap-4 2xl:gap-7.5'>
             <TableUserApplyEntry />
+            <TableCarApplyEntry />
           </div>
 
-          <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
+
+          <div className="mt-4 grid grid-cols-12 gap-4 h-[28rem]">
             <ChartHour chartData={dashboardData.line} />
             <ChartDay chartData={dashboardData.bar} />
             {/* <ChartTwo /> */}

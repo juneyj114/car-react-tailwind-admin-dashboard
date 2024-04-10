@@ -10,8 +10,13 @@ module.exports = {
     },
     screens: {
       '2xsm': '375px',
-      xsm: '425px',
+      'xsm': '425px',
       '3xl': '2000px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
       ...defaultTheme.screens,
     },
     extend: {

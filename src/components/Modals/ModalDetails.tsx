@@ -63,16 +63,41 @@ const ModalDetails: React.FC = () => {
             <div className="p-6.5">
 
               {detailsData.map((data, index) => {
-                return data.visable ? (
-                  <div className="mb-5" key={index}>
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      {data.label}
-                    </label>
-                    <span
-                      className="pl-3"
-                    >{data.valueText}</span>
-                  </div>
-                ) : null
+                // return data.visable ? (
+                //   <div className="mb-5" key={index}>
+                //     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                //       {data.label}
+                //     </label>
+                //     <span
+                //       className="pl-3"
+                //     >{data.valueText}</span>
+                //   </div>
+                // ) : null
+                return data.visable ? 
+                  data.key === 'files' ? (
+                    <div className='mb-3' key={index}>
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">첨부파일</label>
+                      {data.value ? data.value.map((file, index) => {
+                        return (
+                          <span
+                            className=""
+                            key={index}
+                          >
+                            <img src={`data:image/jpg;base64,${file.content}`}></img>
+                          </span>
+                        );
+                      }) : null}
+                    </div>
+                  ) : (
+                    <div className="mb-5" key={index}>
+                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                        {data.label}
+                      </label>
+                      <span
+                        className="pl-3"
+                      >{data.valueText}</span>
+                    </div>
+                  ) : null
               })}                
 
               <button

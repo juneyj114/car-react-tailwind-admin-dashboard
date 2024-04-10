@@ -11,9 +11,11 @@ import DefaultLayout from '../../layout/DefaultLayout';
 import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb';
 import Loader from '../../common/Loader';
 import DataTable from '../../components/DataTables/DataTable';
-import { AllDeviceCameraParams, DeviceCameraData } from '../../types/device';
 import ModalSave from '../../components/Modals/ModalSave';
 import { AllCarParams, CarData } from '../../types/car';
+import CarDataTable from './CarDataTable';
+import { SearchOption } from '../../types/searchOption';
+import { Pageable } from '../../types/pageable';
 
 const Car: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -34,9 +36,14 @@ const Car: React.FC = () => {
         },
         params: {
           page: pageNumber,
-          size: pageSize
+          size: pageSize,
+          type: 'ALL',
+          number: '',
+          sort: 'createDate,desc',
+          expire: 'true'
         } as AllCarParams,
       });
+      // console.log(response);
       
       setCarData(response.data.content.map(c => {
         switch(c.type) {
@@ -60,13 +67,13 @@ const Car: React.FC = () => {
   }, []);
 
   const deviceCameraColumns = [
-    { Header: 'ID', accessor: 'id'},
-    { Header: '아파트명', accessor: 'apartment.name'},
+    // { Header: 'ID', accessor: 'id'},
+    // { Header: '아파트명', accessor: 'apartment.name'},
     { Header: '차량번호', accessor: 'vehicleNumber'},
     { Header: '전화번호', accessor: 'phone'},
-    { Header: '목적', accessor: 'purpose'},
     { Header: '시작일자', accessor: 'startDate'},
     { Header: '종료일자', accessor: 'endDate'},
+    { Header: '메모', accessor: 'purpose'},
     { Header: '허용여부', accessor: 'type'}
 
   ];
@@ -78,6 +85,8 @@ const Car: React.FC = () => {
           Authorization: cookies.accessToken
         }
       });
+
+      // console.log(response);
 
       const apartmentUnitDetailsData = [];
       
@@ -113,7 +122,7 @@ const Car: React.FC = () => {
             break;
           case 'purpose':
             detail.key = k;
-            detail.label = '목적';
+            detail.label = '메모';
             detail.value = response.data[k];
             detail.valueText = convertValueToText(response.data[k]);
             detail.visable = true;
@@ -214,7 +223,7 @@ const Car: React.FC = () => {
             editData.value = response.data[k];
             editData.editable = true;
             editData.visable = true;
-            editData.valueType = ValueType.Text;
+            editData.valueType = ValueType.Date;
             break;
           case 'endDate':
             editData.key = k;
@@ -222,7 +231,7 @@ const Car: React.FC = () => {
             editData.value = response.data[k];
             editData.editable = true;
             editData.visable = true;
-            editData.valueType = ValueType.Text;
+            editData.valueType = ValueType.Date;
             break;
           case 'type':
             editData.key = k;
@@ -259,6 +268,49 @@ const Car: React.FC = () => {
     }
   };
 
+  const getCarLog = async (searchOptions: SearchOption[]) => {
+    // console.log(searchOptions);
+    const params = {
+      page: pageNumber,
+      size: pageSize,
+      sort: 'createDate,desc'
+    };
+
+    searchOptions.forEach((option) => {
+      params[option.key] = option.value;
+    });
+
+    // console.log(params);
+    
+    try {
+      // setLoading(true);
+      const response = await axios.get(carUrl, {
+        headers: {
+          Authorization: cookies.accessToken
+        },
+        params
+      });
+
+      const repsonseCar = response.data.content.map(c => {
+        switch(c.type) {
+          case 'ALLOW':
+            return { ...c, type: '허용' };
+          case 'DENY':
+            return { ...c, type: '금지' };
+          default:
+            return c;
+        }
+      });
+      // console.log(repsonseCar);
+      setCarData(repsonseCar);
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
   const deleteHandler = async (id) => {
     const deleteUrl = carUrl + `/${id}`
     const response = await axios.delete(deleteUrl , {
@@ -286,12 +338,12 @@ const Car: React.FC = () => {
 
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="차량 관리" rootPage="차량" />
+      <Breadcrumb pageName="차량 관리" rootPage="차량 관리" />
       <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10">
         {loading ? (
           <Loader />
         ) : (
-          <DataTable tableData={carData} column={deviceCameraColumns} hasDetailsMode={true} detailsHandler={detailsHandler} hasEditMode={true} editHandler={editHandler} hasDeleteMode={true} deleteHandler={deleteHandler} />
+          <CarDataTable tableData={carData} column={deviceCameraColumns} onSearch={getCarLog} editHandler={editHandler} deleteHandler={deleteHandler} />
         )}
       </div>
       <ModalSave/>

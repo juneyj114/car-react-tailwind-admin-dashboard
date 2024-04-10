@@ -14,4 +14,6 @@ export interface CarData {
 export interface AllCarParams {
     page: number;
     size: number;
+    type: string;
+    number?: string;
 }

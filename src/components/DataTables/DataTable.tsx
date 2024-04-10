@@ -28,11 +28,19 @@ const DataTable = ({
     {
       columns,
       data,
+      initialState: {
+        sortBy: [
+          {
+            id: 'id',
+            desc: true ,
+          },
+        ],
+      },
     },
     useFilters,
     useGlobalFilter,
     useSortBy,
-    usePagination
+    usePagination,
   );
 
   const {
@@ -56,8 +64,8 @@ const DataTable = ({
 
   return (
     <section className="data-table-common data-table-two rounded-sm border border-stroke bg-white py-4 shadow-default text-xs dark:border-strokedark  dark:bg-boxdark">
-      <div className="flex justify-between border-b border-stroke px-8 pb-4 dark:border-strokedark">
-        <div className="w-100">
+      <div className="flex justify-end border-b border-stroke px-8 pb-4 dark:border-strokedark">
+        {/* <div className="w-100">
           <input
             type="text"
             value={globalFilter}
@@ -65,7 +73,7 @@ const DataTable = ({
             className="w-full rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary"
             placeholder="Search..."
           />
-        </div>
+        </div> */}
 
         <div className="flex items-center font-medium">
           <select
@@ -85,7 +93,7 @@ const DataTable = ({
 
       <table
         {...getTableProps()}
-        className="datatable-table w-full table-auto border-collapse overflow-hidden break-words px-4 /*md:table-fixed*/ md:overflow-auto md:px-8"
+        className="text-center datatable-table w-full table-auto border-collapse overflow-hidden break-words px-4 /*md:table-fixed*/ md:overflow-auto md:px-8"
       >
         <thead>
           {headerGroups.map((headerGroup, key) => (
@@ -95,7 +103,7 @@ const DataTable = ({
                   {...column.getHeaderProps(column.getSortByToggleProps())}
                   key={key}
                 >
-                  <div className="flex items-center">
+                  <div className="flex items-center justify-center">
                     <span> {column.render('Header')}</span>
 
                     <div className="ml-2 inline-flex flex-col space-y-[2px]">
@@ -131,18 +139,24 @@ const DataTable = ({
                 </th>
               ))}
               {hasDetailsMode ? (
-                <th colSpan={1} role='columnheader' key={headerGroup.headers.length}>
+                <th className='text-center' colSpan={1} role='columnheader' key={headerGroup.headers.length}>
+                  <div className="flex items-center justify-center" >
                     <span>상세</span>
+                  </div>
                 </th>
                 ) : null}
               {hasEditMode ? (
                 <th colSpan={1} role='columnheader' key={headerGroup.headers.length+1}>
+                  <div className="flex items-center justify-center" >
                     <span>수정</span>
+                  </div>
                 </th>
                 ) : null}
               {hasDeleteMode ? (
                 <th colSpan={1} role='columnheader' key={headerGroup.headers.length+2}>
+                  <div className="flex items-center justify-center" >
                     <span>삭제</span>
+                  </div>
                 </th>
                 ) : null}
             </tr>
@@ -156,7 +170,9 @@ const DataTable = ({
                 {row.cells.map((cell, key) => {
                   return (
                     <td {...cell.getCellProps()} key={key}>
-                      {cell.render('Cell')}
+                      {typeof cell.value === 'boolean' ? 
+                        cell.value ? '예' : '아니오'
+                      : cell.value}
                     </td>
                   );
                 })}

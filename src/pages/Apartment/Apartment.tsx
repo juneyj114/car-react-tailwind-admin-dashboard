@@ -38,7 +38,7 @@ const Apartment: React.FC = () => {
           address: ""
         } as AllApartmentParams,
       });
-      console.log(response.data.content);
+      // console.log(response.data.content);
       setApartmentData(response.data.content.map(c => {
         switch(c.limitType) {
           case 'NONE':
@@ -63,14 +63,15 @@ const Apartment: React.FC = () => {
   }, []);
 
   const apartmentColumns = [
-    { Header: 'ID', accessor: 'id'},
+    // { Header: 'ID', accessor: 'id'},
     { Header: '이름', accessor: 'name'},
     { Header: '주소', accessor: 'address'},
     { Header: '제한 타입', accessor: 'limitType'},
     { Header: '제한 시간(분 단위)', accessor: 'limitTime'},
     { Header: '제한 횟수', accessor: 'limitCount'},
     { Header: '거주 구분', accessor: 'type'},
-
+    { Header: '만료일', accessor: 'expireDate'},
+    // { Header: '요금제', accessor: 'expireDate'},
   ];
 
   const detailsHandler = async (id) => {
@@ -150,14 +151,14 @@ const Apartment: React.FC = () => {
             break;
           case "qna":
             detail.key = k;
-            detail.label = 'qna 사용 여부';
+            detail.label = 'QnA 사용 여부';
             detail.value = response.data[k];
             detail.valueText = convertValueToText(response.data[k]);
             detail.visable = true;
             break;
           case "faq":
             detail.key = k;
-            detail.label = 'faq 사용 여부';
+            detail.label = 'FAQ 사용 여부';
             detail.value = response.data[k];
             detail.valueText = convertValueToText(response.data[k]);
             detail.visable = true;
@@ -297,7 +298,7 @@ const Apartment: React.FC = () => {
             break;
           case "qna":
             editData.key = k;
-            editData.label = 'qna 사용 여부';
+            editData.label = 'QnA 사용 여부';
             editData.value = response.data[k];
             editData.editable = true;
             editData.visable = true;
@@ -305,7 +306,7 @@ const Apartment: React.FC = () => {
             break;
           case "faq":
             editData.key = k;
-            editData.label = 'faq 사용 여부';
+            editData.label = 'FAQ 사용 여부';
             editData.value = response.data[k];
             editData.editable = true;
             editData.visable = true;
@@ -362,10 +363,10 @@ const Apartment: React.FC = () => {
         {loading ? (
           <Loader />
         ) : (
-          <DataTable tableData={apartmentData} column={apartmentColumns} hasDetailsMode={true} detailsHandler={detailsHandler} hasEditMode={true} editHandler={editHandler} hasDeleteMode={true} deleteHandler={deleteHandler} />
+          <DataTable tableData={apartmentData} column={apartmentColumns} hasDetailsMode={true} detailsHandler={detailsHandler}/>
         )}
       </div>
-      <ModalSave/>
+      {/* <ModalSave/> */}
     </DefaultLayout>
   );
 };

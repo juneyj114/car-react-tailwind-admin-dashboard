@@ -87,6 +87,9 @@ const ModalEdit: React.FC = () => {
       case '/car':
         updateUrl = updateUrl + import.meta.env.VITE_CAR_ENDPOINT;
         break;
+      case '/notice':
+        updateUrl = updateUrl + import.meta.env.VITE_NOTICE_ENDPOINT;
+        break;
       default:
         break;
     }
@@ -95,13 +98,13 @@ const ModalEdit: React.FC = () => {
     editableEditData.forEach((data) => {
       willUpdateData[data.key] = data.value;
     });
-    console.log(willUpdateData);
+    // console.log(willUpdateData);
     const response = await axios.put(`${updateUrl}/${willUpdateData['id']}`, willUpdateData, {
       headers: {
         Authorization: cookies.accessToken
       }
     });
-
+    
     closeModal();
   };
 
@@ -148,6 +151,14 @@ const ModalEdit: React.FC = () => {
                             onChange={(e) => handleChange(index, e.target.value, e.target.type)}
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                           />
+                        )}
+                        {data.valueType === ValueType.Content && (
+                          <textarea
+                            rows={6}
+                            placeholder=""
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            defaultValue={data.value}
+                          ></textarea>
                         )}
                         {data.valueType === ValueType.Number && (
                           <input

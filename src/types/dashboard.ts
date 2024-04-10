@@ -12,6 +12,7 @@ interface BarData {
 
 export interface DashboardData {
     unitCount: number;
+    vehicleCount: number;
     visitInCount: number;
     visitOutCount: number;
     inCount: number;

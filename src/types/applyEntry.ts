@@ -1,6 +1,6 @@
 export type ApplyEntry = {
   dong: string;
   ho: string;
-  vehicleNumber: string;
+  userId: string;
   applyDate: string;
 };

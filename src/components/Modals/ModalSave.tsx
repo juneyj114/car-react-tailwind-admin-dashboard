@@ -5,9 +5,8 @@ import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 import AddressInput from '../Address/AddressInput';
-import ModalApartment from './ModalApartment';
-import { apartmentIdState } from '../../state/atoms/apartmentIdState';
 import { useRecoilValue } from 'recoil';
+import { headerState } from '../../state/atoms/headerState';
 
 
 interface SaveData {
@@ -16,13 +15,15 @@ interface SaveData {
   value: any,
   visable: boolean,
   selectGroupValues?: any,
-  valueType: ValueType
+  valueType: ValueType,
+  optional: boolean
 }
 
 const ModalSave: React.FC = () => {
   const [cookies] = useCookies(['accessToken', 'refreshToken']);
   const [modalOpen, setModalOpen] = useState(false);
   const [saveData, setSaveData] = useState<SaveData[]>([]);
+  const headerData = useRecoilValue(headerState);
   
   const location = useLocation();
   const trigger = useRef<any>(null);
@@ -55,18 +56,22 @@ const ModalSave: React.FC = () => {
   });
 
   useEffect(() => {
+    initSaveData();
+  }, []);
+
+  const initSaveData = () => {
     const pathname = location.pathname;
     const initialData: SaveData[] = [];
     switch (pathname) {
       case '/admin/apartment':
-        initialData.push({key: 'name', label: '이름', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'region1DepthName', label: '고객사 지역명 1', value: '', valueType: ValueType.Text, visable: false});
-        initialData.push({key: 'region2DepthName', label: '고객사 지역명 2', value: '', valueType: ValueType.Text, visable: false});
-        initialData.push({key: 'region3DepthName', label: '고객사 지역명 3', value: '', valueType: ValueType.Text, visable: false});
-        initialData.push({key: 'roadName', label: '도로명', value: '', valueType: ValueType.Text, visable: false});
-        initialData.push({key: 'address', label: '주소', value: '', valueType: ValueType.Address, visable: true});
-        initialData.push({key: 'zoneNo', label: '우편번호', value: '', valueType: ValueType.Text, visable: false});
-        initialData.push({key: 'limitType', label: '제한 타입', value: 'COUNT', valueType: ValueType.SelectGroup, visable: true, selectGroupValues: [
+        initialData.push({key: 'name', label: '이름', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'region1DepthName', label: '고객사 지역명 1', value: '', valueType: ValueType.Text, visable: false, optional: false});
+        initialData.push({key: 'region2DepthName', label: '고객사 지역명 2', value: '', valueType: ValueType.Text, visable: false, optional: false});
+        initialData.push({key: 'region3DepthName', label: '고객사 지역명 3', value: '', valueType: ValueType.Text, visable: false, optional: false});
+        initialData.push({key: 'roadName', label: '도로명', value: '', valueType: ValueType.Text, visable: false, optional: false});
+        initialData.push({key: 'address', label: '주소', value: '', valueType: ValueType.Address, visable: true, optional: false});
+        initialData.push({key: 'zoneNo', label: '우편번호', value: '', valueType: ValueType.Text, visable: false, optional: false});
+        initialData.push({key: 'limitType', label: '제한 타입', value: 'COUNT', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
           {
             label: "횟수",
             value: "COUNT"
@@ -80,27 +85,27 @@ const ModalSave: React.FC = () => {
             value: "NONE"
           }
         ]});
-        initialData.push({key: 'limitTime', label: '제한 시간(분 단위)', value: '', valueType: ValueType.Number, visable: true});
-        initialData.push({key: 'limitCount', label: '제한 횟수', value: '', valueType: ValueType.Number, visable: true});
-        initialData.push({key: 'networkCheckSecond', label: '네트워크 체크 시간(초 단위)', value: '', valueType: ValueType.Number, visable: true});
-        initialData.push({key: 'qna', label: 'qna 사용 여부', value: '', valueType: ValueType.Boolean, visable: true});
-        initialData.push({key: 'faq', label: 'faq 사용 여부', value: '', valueType: ValueType.Boolean, visable: true});
+        initialData.push({key: 'limitTime', label: '제한 시간(분 단위)', value: '', valueType: ValueType.Number, visable: true, optional: false});
+        initialData.push({key: 'limitCount', label: '제한 횟수', value: '', valueType: ValueType.Number, visable: true, optional: false});
+        initialData.push({key: 'networkCheckSecond', label: '네트워크 체크 시간(초 단위)', value: '', valueType: ValueType.Number, visable: true, optional: false});
+        initialData.push({key: 'qna', label: 'QnA 사용 여부', value: '', valueType: ValueType.Boolean, visable: true, optional: false});
+        initialData.push({key: 'faq', label: 'FAQ 사용 여부', value: '', valueType: ValueType.Boolean, visable: true, optional: false});
         break;
       case '/apartment/unit':
-        initialData.push({key: 'dong', label: '동', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'ho', label: '호', value: '', valueType: ValueType.Text, visable: true});
+        initialData.push({key: 'dong', label: '동', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'ho', label: '호', value: '', valueType: ValueType.Text, visable: true, optional: false});
         break;
       case '/device':
-        initialData.push({key: 'apartmentId', label: '아파트ID', value: '', valueType: ValueType.Number, visable: false});
-        initialData.push({key: 'apartmentName', label: '아파트명', value: '', valueType: ValueType.Apartment, visable: true});
-        initialData.push({key: 'serialNumber', label: '시리얼 번호', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'macAddress', label: 'MAC 주소', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'modelName', label: '모델명', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'internalIp', label: '내부 IP', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'internalPort', label: '내부 포트', value: '', valueType: ValueType.Number, visable: true});
-        initialData.push({key: 'externalIp', label: '외부 IP', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'externalPort', label: '외부 포트', value: '', valueType: ValueType.Number, visable: true});
-        initialData.push({key: 'inOutType', label: '카메라 타입', value: '', valueType: ValueType.SelectGroup, visable: true, selectGroupValues: [
+        initialData.push({key: 'apartmentId', label: '아파트ID', value: '', valueType: ValueType.Number, visable: false, optional: false});
+        initialData.push({key: 'apartmentName', label: '아파트명', value: '', valueType: ValueType.Apartment, visable: true, optional: false});
+        initialData.push({key: 'serialNumber', label: '시리얼 번호', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'macAddress', label: 'MAC 주소', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'modelName', label: '모델명', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'internalIp', label: '내부 IP', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'internalPort', label: '내부 포트', value: '', valueType: ValueType.Number, visable: true, optional: false});
+        initialData.push({key: 'externalIp', label: '외부 IP', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'externalPort', label: '외부 포트', value: '', valueType: ValueType.Number, visable: true, optional: false});
+        initialData.push({key: 'inOutType', label: '카메라 타입', value: '', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
           {
             label: "입차",
             value: "IN"
@@ -114,18 +119,18 @@ const ModalSave: React.FC = () => {
             value: "BOTH"
           }
         ]});
-        initialData.push({key: 'adminId', label: '어드민 ID', value: '', valueType: ValueType.Text, visable: true});
-        initialData.push({key: 'adminPassword', label: '어드민 PW', value: '', valueType: ValueType.Text, visable: true});
+        initialData.push({key: 'adminId', label: '어드민 ID', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({key: 'adminPassword', label: '어드민 PW', value: '', valueType: ValueType.Text, visable: true, optional: false});
         break;
       case '/car':
-          initialData.push({key: 'apartmentId', label: '아파트ID', value: '', valueType: ValueType.Number, visable: false});
-          initialData.push({key: 'apartmentName', label: '아파트명', value: '', valueType: ValueType.Apartment, visable: true});
-          initialData.push({key: 'vehicleNumber', label: '차량번호', value: '', valueType: ValueType.Text, visable: true});
-          initialData.push({key: 'phone', label: '전화번호', value: '', valueType: ValueType.Text, visable: true});
-          initialData.push({key: 'purpose', label: '목적', value: '', valueType: ValueType.Text, visable: true});
-          initialData.push({key: 'startDate', label: '시작일자', value: '', valueType: ValueType.Text, visable: true});
-          initialData.push({key: 'endDate', label: '종료일자', value: '', valueType: ValueType.Text, visable: true});
-          initialData.push({key: 'type', label: '허용여부', value: '', valueType: ValueType.SelectGroup, visable: true, selectGroupValues: [
+          initialData.push({key: 'apartmentId', label: '아파트ID', value: headerData.apartmentId, valueType: ValueType.Number, visable: false, optional: true});
+          initialData.push({key: 'apartmentName', label: '아파트명', value: headerData.apartmentName, valueType: ValueType.Apartment, visable: false, optional: false});
+          initialData.push({key: 'number', label: '차량번호', value: '', valueType: ValueType.Text, visable: true, optional: false});
+          initialData.push({key: 'phone', label: '전화번호', value: '', valueType: ValueType.Text, visable: true, optional: true});
+          initialData.push({key: 'purpose', label: '메모', value: '', valueType: ValueType.Text, visable: true, optional: true});
+          initialData.push({key: 'startDate', label: '시작일자', value: '', valueType: ValueType.Date, visable: true, optional: false});
+          initialData.push({key: 'endDate', label: '종료일자', value: '', valueType: ValueType.Date, visable: true, optional: false});
+          initialData.push({key: 'type', label: '허용여부', value: 'ALLOW', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
             {
               label: "허용",
               value: "ALLOW"
@@ -136,11 +141,16 @@ const ModalSave: React.FC = () => {
             }
           ]});
           break;
+        case '/notice':
+          initialData.push({key: 'title', label: '제목', value: '', valueType: ValueType.Text, visable: true, optional: false});
+          initialData.push({key: 'content', label: '내용', value: '', valueType: ValueType.Content, visable: true, optional: false});
+          initialData.push({key: 'files', label: '첨부파일', value: null, valueType: ValueType.Files, visable: true, optional: false});
+          break;
       default:
         break;
     }
     setSaveData(initialData);
-  }, []);
+  };
 
   const handleChange = (index, value, type) => {
     const tempSaveEditData = [...saveData];
@@ -159,37 +169,104 @@ const ModalSave: React.FC = () => {
 
   const closeModal = () => {
     // setIsSetInitialEditData(false);
+    initSaveData();
     setModalOpen(false);
   };
 
   const saveHandler = async () => {
     const pathname = location.pathname;
+    let willSaveData;
+    let headers = {
+      Authorization: cookies.accessToken
+    };
     let saveUrl = import.meta.env.VITE_BASE_URL;
     switch (pathname) {
       case '/admin/apartment':
         saveUrl = saveUrl + import.meta.env.VITE_APARTMENT_ENDPOINT;
+        willSaveData = {};
+        saveData.forEach((data) => {
+          willSaveData[data.key] = data.value;
+        });
         break;
       case '/device':
         saveUrl = saveUrl + import.meta.env.VITE_DEVICE_ENDPOINT;
+        willSaveData = {};
+        saveData.forEach((data) => {
+          willSaveData[data.key] = data.value;
+        });
+        break;
+      case '/car':
+        saveUrl = saveUrl + import.meta.env.VITE_CAR_ENDPOINT;
+        // console.log(saveUrl);
+        willSaveData = {};
+        // console.log(saveData);
+        saveData.forEach((data) => {
+          // console.log(`${data.key} / ${data.value} / ${data.optional}`);
+          if (!data.optional && !data.value) {
+            alert(`${data.label}는/은 필수값입니다.`);
+            return;
+          }
+          willSaveData[data.key] = data.value;
+        });
+        break;
+      case '/notice':
+        saveUrl = saveUrl + import.meta.env.VITE_NOTICE_ENDPOINT;
+        const tempSaveData = {};
+        const formData = new FormData();
+        saveData.forEach((data) => {
+          if (data.key === 'files') {
+            // console.log(data);
+            Array.from(data.value).forEach((el: any) => {
+              formData.append('files', el);
+            });
+          } else { 
+            tempSaveData[data.key] = data.value;
+          }
+        });
+        formData.append('request', new Blob([JSON.stringify(tempSaveData)], {type: "application/json"}));
+        willSaveData = formData;
+        
+        // console.log(headers);
         break;
       default:
         break;
     }
 
-    const willSaveData = {};
-    saveData.forEach((data) => {
-      willSaveData[data.key] = data.value;
-    });
-    console.log(willSaveData);
-
+    // console.log(willSaveData);
+    
     const response = await axios.post(saveUrl , willSaveData, {
-      headers: {
-        Authorization: cookies.accessToken
-      }
+      headers: headers
     });
 
     closeModal();
   };
+
+  const handleDateChange = (index, value) => {
+    const inputDate = value;
+    const tempSaveEditData = [...saveData];
+    const previousInputDate = tempSaveEditData[index].value;
+    //  console.log(`{current: ${inputDate}, previous: ${previousInputDate}}`);
+
+     let formattedDate = inputDate.replace(/\D/g, ''); // 숫자가 아닌 문자 제거
+      // 연도에 대해 '-' 추가
+      if(inputDate.length > previousInputDate.length) {
+        if (formattedDate.length > 3) {
+          formattedDate = formattedDate.slice(0, 4) + '-' + formattedDate.slice(4);
+        }
+        // 월에 대해 '-' 추가
+        if (formattedDate.length > 6) {
+          formattedDate = formattedDate.slice(0, 7) + '-' + formattedDate.slice(7);
+        } if (formattedDate.length > 10) {
+          return;
+        }
+      } else {
+        formattedDate = value;  
+      }
+
+      tempSaveEditData[index] = {...tempSaveEditData[index], value: formattedDate};
+      setSaveData(tempSaveEditData);
+  };
+
 
   return (
     <div className='text-xs'>
@@ -222,7 +299,7 @@ const ModalSave: React.FC = () => {
                 return data.visable ? (
                   <div className="mb-5" key={index}>
                     <label className="mb-3 block text-sm font-medium text-black dark:text-white">
-                      {data.label}
+                      {data.label} {data.optional ? null : (<span className="text-meta-1">*</span>)}
                     </label>
                     {data.valueType === ValueType.Text && (
                       <input
@@ -233,17 +310,35 @@ const ModalSave: React.FC = () => {
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     )}
+                    {data.valueType === ValueType.Content && (
+                      <textarea
+                        rows={6}
+                        placeholder=""
+                        onChange={(e) => handleChange(index, e.target.value, e.target.type)}
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        defaultValue={data.value}
+                      ></textarea>
+                    )}
                     {data.valueType === ValueType.Number && (
                       <input
-                        type="number"
-                        placeholder=""
-                        value={data.value ? data.value : 0}
+                        type="text"
+                        placeholder="2024-01-01"
+                        value={data.value ? data.value : ''}
                         onChange={(e) => handleChange(index, e.target.value, e.target.type)}
                         className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                       />
                     )}
                     {data.valueType === ValueType.SelectGroup && (
                       <SelectGroup selectGroupValues={data.selectGroupValues} saveData={saveData} setSaveData={setSaveData} saveKey={data.key}/>
+                    )}
+                    {data.valueType === ValueType.Date && (
+                      <input
+                      type="text"
+                      placeholder="2024-01-01"
+                      value={data.value ? data.value : ''}
+                      onChange={(e) => handleDateChange(index, e.target.value)}
+                      className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                    />
                     )}
                     {data.valueType === ValueType.Boolean && (
                       <div>
@@ -272,28 +367,36 @@ const ModalSave: React.FC = () => {
                     {data.valueType === ValueType.Address && (
                       <AddressInput saveData={saveData} addressData={data.value} setSaveData={setSaveData} />
                     )}
-                    {data.valueType === ValueType.Apartment && (
+                    {/* {data.valueType === ValueType.Apartment && (
                       <ModalApartment saveData={saveData} setSaveData={setSaveData}/>
+                    )} */}
+                    {data.valueType === ValueType.Files && (
+                      <input 
+                        type='file'
+                        multiple={true}
+                        onChange={(e) => {handleChange(index, e.target.files, e.target.type)}}
+                      > 
+                      </input>
                     )}
                   </div>
                 ) : null
               })}
               <div className="-mx-3 flex flex-wrap gap-y-4">
                 <div className="2xsm:w-1/2 w-full px-3">
-                  <button
+                  <div
                     onClick={() => closeModal()}
-                    className="block w-full rounded border border-stroke bg-gray p-3 text-center font-medium text-black transition hover:border-meta-1 hover:bg-meta-1 hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-white dark:hover:border-meta-1 dark:hover:bg-meta-1"
+                    className="cursor-pointer block w-full rounded border border-stroke bg-gray p-3 text-center font-medium text-black transition hover:border-meta-1 hover:bg-meta-1 hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-white dark:hover:border-meta-1 dark:hover:bg-meta-1"
                   >
                     취소
-                  </button>
+                  </div>
                 </div>
                 <div className="2xsm:w-1/2 w-full px-3">
-                  <button
+                  <div
                     onClick={saveHandler}
-                    className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
+                    className="cursor-pointer block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
                   >
                     저장
-                  </button>
+                  </div>
                 </div>
               </div>
             </div>

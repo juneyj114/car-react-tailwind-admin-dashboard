@@ -4,5 +4,8 @@ export enum ValueType {
     Text = 'text',
     Number = 'number',
     Address = 'address',
-    Apartment = 'apartment'
+    Apartment = 'apartment',
+    Content = 'content',
+    Files = 'files',
+    Date = 'date'
 }

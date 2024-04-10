@@ -181,7 +181,7 @@ const ApartmentUnit: React.FC = () => {
         Authorization: cookies.accessToken
       }
     });
-    console.log(response);
+    // console.log(response);
     getAllApartmentUnit();
   };
 
