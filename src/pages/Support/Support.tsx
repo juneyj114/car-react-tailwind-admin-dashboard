@@ -83,7 +83,7 @@ const Support: React.FC = () => {
                   </button>
 
                   <div
-                    className={`mt-5 ml-16.5 duration-200 ease-in-out ${
+                    className={`mt-5 ml-1 mr-1 lg:ml-16.5 lg:mr-16.5 duration-200 ease-in-out ${
                       active === e.id ? 'block' : 'hidden'
                     }`}
                   >
