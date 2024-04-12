@@ -130,14 +130,21 @@ const options: ApexOptions = {
     // min: 0,
     // max: 100,
   },
-  // tooltip: {
-  //   enabled: true,
-  //   intersect: false,
-  //   x: {
-  //     show: true,
-  //     formatter: (value) => `${value}요일`,
-  //   }
-  // },
+  tooltip: {
+    x: {
+      formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+        const exit = w.globals.series[seriesIndex][dataPointIndex];
+        const entry = w.globals.series[seriesIndex][dataPointIndex];
+        const total = exit + entry;
+        return `${value}요일(합: ${total})`
+      }
+    },
+    y: {
+      formatter: function (val) {
+        return `${val}`
+      }
+    }
+  },
 };
 
 interface ChartOneState {

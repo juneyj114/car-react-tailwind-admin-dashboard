@@ -143,14 +143,13 @@ const options: ApexOptions = {
         const total = exit + entry;
         return `${value}시(합 : ${total})`; // Combine legend title and entry value
       },
+      // formatter: (value, { seriesIndex, dataPointIndex, w }) => {
+      //   const exit = w.globals.series[1][dataPointIndex]; 
+      //   const entry = w.globals.series[0][dataPointIndex]; 
+      //   const total = parseInt(exit, 10) + parseInt(entry, 10); 
+      //   return `${value}시(합 : ${total})`;
+      // },
     },
-    // y: {
-    //   formatter: (value, { seriesIndex, dataPointIndex, w }) => {
-    //     const title = w.globals.seriesNames[seriesIndex]; // Get legend title
-    //     const entry = w.globals.series[seriesIndex][dataPointIndex]; // Get entry value
-    //     return `${title}: ${entry}`; // Combine legend title and entry value
-    //   },
-    // },
   },
 };
 
