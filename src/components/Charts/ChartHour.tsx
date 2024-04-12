@@ -130,6 +130,28 @@ const options: ApexOptions = {
     // min: 0,
     // max: 100,
   },
+  tooltip: {
+    enabled: true,
+    shared: true,
+    intersect: false,
+    // followCursor: true,
+    x: {
+      show: true,
+      formatter: (value, { seriesIndex, dataPointIndex, w }) => {
+        const exit = w.globals.series[seriesIndex][dataPointIndex];
+        const entry = w.globals.series[seriesIndex][dataPointIndex];
+        const total = exit + entry;
+        return `${value}시(합 : ${total})`; // Combine legend title and entry value
+      },
+    },
+    // y: {
+    //   formatter: (value, { seriesIndex, dataPointIndex, w }) => {
+    //     const title = w.globals.seriesNames[seriesIndex]; // Get legend title
+    //     const entry = w.globals.series[seriesIndex][dataPointIndex]; // Get entry value
+    //     return `${title}: ${entry}`; // Combine legend title and entry value
+    //   },
+    // },
+  },
 };
 
 const ChartHour = ({

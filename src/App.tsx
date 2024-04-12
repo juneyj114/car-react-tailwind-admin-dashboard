@@ -36,9 +36,9 @@ function App() {
   }, [pathname]);
 
   useEffect(() => {
-    if (!cookies.accessToken && location.pathname != '/auth/signin' ) {
+    if (!cookies.accessToken && location.pathname != '/auth/signin') {
       alert('로그인이 만료되었습니다. 로그인창으로 이동합니다.');
-      navigate('/auth/signin');
+      navigate('/');
     }
     setLoading(false);
   }, []);
@@ -50,7 +50,7 @@ function App() {
       <Routes>
 
         <Route
-          path="/auth/signin"
+          path='/'
           element={
             <>
               <PageTitle title="로그인 | Admin - Car Admin Signin" />
@@ -61,6 +61,7 @@ function App() {
 
         <Route
           index
+          path='/main'
           element={
             <>
               <PageTitle title="메인 | Admin - Car Admin Dashboard" />

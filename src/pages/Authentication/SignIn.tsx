@@ -23,7 +23,7 @@ const SignIn: React.FC = () => {
       setCookie('accessToken', response.data.accessToken, {path: "/"});
       setCookie('refreshToken', response.data.refreshToken, {path: "/"});
 
-      navigate("/");
+      navigate("/main");
     } catch (error) {
       alert(error.response.data.detail);
       console.error('로그인 실패:', error);

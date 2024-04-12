@@ -130,6 +130,14 @@ const options: ApexOptions = {
     // min: 0,
     // max: 100,
   },
+  // tooltip: {
+  //   enabled: true,
+  //   intersect: false,
+  //   x: {
+  //     show: true,
+  //     formatter: (value) => `${value}요일`,
+  //   }
+  // },
 };
 
 interface ChartOneState {

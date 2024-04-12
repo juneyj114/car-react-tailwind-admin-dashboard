@@ -22,7 +22,7 @@ const DeleteAccount = () => {
             userId,
             password,
         });
-        alert('계정이 삭제 완료되었습니다.');
+        alert('계정 삭제가 완료되었습니다.');
         setUserId('');
         setPassword('');
         } catch (error) {
