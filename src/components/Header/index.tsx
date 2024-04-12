@@ -170,7 +170,8 @@ const Header = (props: {
               {/* <!-- Dark Mode Toggler --> */}
 
               {/* <!-- Notification Menu Area --> */}
-              <DropdownNotification />
+              {/* 알림 부분 */}
+              {/* <DropdownNotification /> */}
               {/* <!-- Notification Menu Area --> */}
 
               {/* <!-- Chat Notification Area --> */}

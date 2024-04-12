@@ -9,7 +9,7 @@ const DeleteAccount = () => {
         e.preventDefault();
 
         if (userId === '') {
-            alert('계정명을 입려해주세요.');
+            alert('계정명을 입력해주세요.');
             return;
         }
         if (password === '') {
@@ -45,26 +45,8 @@ const DeleteAccount = () => {
                     <div>삭제되는 내용을 확인하시고 필요한 데이터는 미리 백업을 해주세요.</div>
                     <div className="flex flex-col border-t border-solid mt-2">
                         <div className="flex flex-row items-center border-b">
-                            <div className="border-r text-right py-3 pl-3 pr-1 lg:pr-5">메일</div>
-                            <div className="pl-1 lg:pl-5">메일 계정 및 보관중인 메일 삭제</div>
-                        </div>
-                        <div className="flex flex-row items-center border-b">
-                        <div className="border-r text-right py-3 pl-3 pr-1 lg:pr-5">메일</div>
-                        <div className="pl-1 lg:pl-5">메일 계정 및 보관중인 메일 삭제</div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-                    <div className="font-bold mb-2">3. 탈퇴 후에도 아래 기록은 그대로 남아 있습니다.</div>
-                    <div>아래 기록은 탈퇴 시 자동 삭제되지 않고 그대로 남아 있습니다.</div>
-                    <div className="flex flex-col border-t border-solid mt-2">
-                        <div className="flex flex-row items-center border-b">
-                            <div className="border-r text-right py-3 pl-3 pr-1 lg:pr-5">메일</div>
-                            <div className="pl-1 lg:pl-5">메일 계정 및 보관중인 메일 삭제</div>
-                        </div>
-                        <div className="flex flex-row items-center border-b">
-                            <div className="border-r text-right py-3 pl-3 pr-1 lg:pr-5">메일</div>
-                            <div className="pl-1 lg:pl-5">메일 계정 및 보관중인 메일 삭제</div>
+                            <div className="border-r text-right py-3 pl-3 pr-1 lg:pr-5">삭제되는 데이터</div>
+                            <div className="pl-1 lg:pl-5">세대 연결 해제, 차량번호, 입출차 내역, 계정 정보, 푸시 알림 내역</div>
                         </div>
                     </div>
                 </li>

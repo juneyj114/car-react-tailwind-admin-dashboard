@@ -181,7 +181,7 @@ const ApartmentUnitCar: React.FC = () => {
                       >
                         <div className='flex justify-between w-full gap-1.5'>
                           <div>{dong.dong}동</div>
-                          <div className='text-sm'>{dong.count}</div>
+                          <div className='text-sm'>{`${dong.count}대`}</div>
                         </div>
                       </div>
                     </li>
@@ -191,8 +191,8 @@ const ApartmentUnitCar: React.FC = () => {
               {/* <InboxMenuList /> */}
             </div>
             <div className='p-5 absolute bottom-0 flex justify-between w-full'>
-              <div>전체</div>
-              <div className='text-sm'>{carUnitData.totalCount}</div>
+              <div>전체 차량 대수</div>
+              <div className='text-sm'>{`${carUnitData.totalCount}대`}</div>
             </div>
           </div>
           <div className="lg:w-4/5 flex h-full flex-col border-l border-stroke dark:border-strokedark">
