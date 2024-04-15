@@ -309,7 +309,7 @@ const CarLogTable = ({
                       // onChange={(e) => setEndDate(e.target.value)}
                       className="w-full focus:outline-none"
                       placeholder=""
-                    />
+                    /> */}
                     <input
                       type="date"
                       value={selectedDate} // startDate 대신에 selectedDate를 사용
@@ -318,7 +318,7 @@ const CarLogTable = ({
                       placeholder="yyyy-mm-dd"
                       max={getCurrentDate()}
                     />
-                    {showCalendar && (
+                    {/* {showCalendar && (
                       <div className='absolute z-50 top-full left-0 mt-1' ref={calendarRef}>
                         <Calendar onChange={handlEndDateChange} value={endDate} formatDay={(locale, date) => date.getDate().toString()} />
                       </div>
