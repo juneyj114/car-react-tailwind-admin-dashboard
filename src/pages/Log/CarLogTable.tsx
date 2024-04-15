@@ -1,50 +1,69 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  useTable,
-  useSortBy,
-  useGlobalFilter,
-  useFilters,
-  usePagination
-} from 'react-table';
-import SortIcon from '../../components/Sort/SortIcon';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
-import CarLogDetailsModal from './CarLogDetailsModal';
-import { CarLogDetails } from '../../types/carLog';
-import Loader from '../../common/Loader';
-import DropdownDefault from '../../components/Dropdowns/DropdownEditMode';
-import DropdownSearch from '../../components/Dropdowns/DropdownSearch';
-import ExcelLogo from '../../images/icon/excel_logo.png';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { startDateState } from '../../state/atoms/startDateState';
-import { endDateState } from '../../state/atoms/endDSateState';
-import * as XLSX from 'xlsx-js-style'
-import { pageUnitState } from '../../state/atoms/pageUnitState';
-import Calendar from 'react-calendar';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import 'react-calendar/dist/Calendar.css';
+import { useCookies } from 'react-cookie';
+import {
+  useFilters,
+  useGlobalFilter,
+  usePagination,
+  useSortBy,
+  useTable
+} from 'react-table';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import * as XLSX from 'xlsx-js-style';
+import Loader from '../../common/Loader';
+import DropdownSearch from '../../components/Dropdowns/DropdownSearch';
+import SortIcon from '../../components/Sort/SortIcon';
+import ExcelLogo from '../../images/icon/excel_logo.png';
 import { formatYMD } from '../../js/dateFormat';
+import { endDateState } from '../../state/atoms/endDSateState';
+import { pageUnitState } from '../../state/atoms/pageUnitState';
+import { startDateState } from '../../state/atoms/startDateState';
+import { CarLogDetails } from '../../types/carLog';
 
 const CarLogTable = ({
   column,
   tableData,
   onSearch
- }) => {
+}) => {
 
   const columns = useMemo(() => column, []);
   const data = useMemo(() => tableData, [tableData]);
   const [cookies] = useCookies(['accessToken', 'refreshToken']);
   const [loading, setLoading] = useState<boolean>(false);
   const [carLogDetails, setCarLogDetails] = useState<CarLogDetails>();
-  const [searchOption, setSearchOption] = useState({key: 'number', value: ''});
-  const [startDate, setStartDate] = useRecoilState(startDateState);
+  const [searchOption, setSearchOption] = useState({ key: 'number', value: '' });
+  // const [startDate, setStartDate] = useRecoilState(startDateState);
   const [endDate, setEndDate] = useRecoilState(endDateState);
   const [dateType, setDateType] = useState('in');
-  const [carType, setCarType] = useState({key: 'type', value: 'ALL'});
+  const [carType, setCarType] = useState({ key: 'type', value: 'ALL' });
   const pageUnit = useRecoilValue(pageUnitState);
   const [pages, setPages] = useState<number[]>([]);
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
   // const [currentPage, setCurrentPage] = useState<number>(1);
+
+  // 리액트 캘린더 대신 사용한 상태관리 및 함수
+  const [startDate, setStartDate] = useRecoilState(dateType === 'in' ? startDateState : endDateState);
+
+  const [selectedDate, setSelectedDate] = useState(startDate); // 선택한 날짜를 관리하기 위한 상태 추가
+
+  const handleChange = (event) => {
+    const selectedValue = event.target.value;
+    setStartDate(selectedValue);
+    setSelectedDate(selectedValue); // 선택한 날짜 업데이트
+  };
+
+  // 현재 날짜를 yyyy-mm-dd 형식으로 가져오는 함수
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 해줌
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // 여기까지
 
   const tableInstance = useTable(
     {
@@ -69,7 +88,7 @@ const CarLogTable = ({
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page ,
+    page,
     prepareRow,
     state,
     setGlobalFilter,
@@ -85,8 +104,8 @@ const CarLogTable = ({
   const { globalFilter, pageIndex, pageSize } = state;
 
   state.pageSize = 10;
-  
-  
+
+
   const carLogUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_LOG_ENDPOINT;
 
   const getCarLogDetails = async (id) => {
@@ -111,15 +130,15 @@ const CarLogTable = ({
     let rows = [
       // ['차량구분', '차량번호', '입차일시', '출차일시']
       [
-        { v: '차량구분', t: 's', s: {alignment: {horizontal: 'center'}}},
-        { v: '차량번호', t: 's', s: {alignment: {horizontal: 'center'}}},
-        { v: '입차일시', t: 's', s: {alignment: {horizontal: 'center'}}},
-        { v: '출차일시', t: 's', s: {alignment: {horizontal: 'center'}}}
+        { v: '차량구분', t: 's', s: { alignment: { horizontal: 'center' } } },
+        { v: '차량번호', t: 's', s: { alignment: { horizontal: 'center' } } },
+        { v: '입차일시', t: 's', s: { alignment: { horizontal: 'center' } } },
+        { v: '출차일시', t: 's', s: { alignment: { horizontal: 'center' } } }
       ]
     ];
     data.forEach((e) => {
       rows.push([
-        e.typeText, e.in.vehicleNumber, e.in.inOutTime, e.out? e.out.inOutTime : ''
+        e.typeText, e.in.vehicleNumber, e.in.inOutTime, e.out ? e.out.inOutTime : ''
       ]);
     });
     // console.log(rows);
@@ -127,14 +146,14 @@ const CarLogTable = ({
     ws['!cols'] = [
       {},
       {},
-      {wpx: 150},
-      {wpx: 150},
+      { wpx: 150 },
+      { wpx: 150 },
     ];
     XLSX.utils.book_append_sheet(wb, ws, "입출차 내역");
 
     XLSX.writeFile(wb, "입출차 내역.xlsx");
   };
-  
+
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -145,18 +164,18 @@ const CarLogTable = ({
   const handleSearch = () => {
     const searchParams = [];
     if (dateType === 'in') {
-      searchParams.push({key: 'inStartDate', value: startDate});
-      searchParams.push({key: 'inEndDate', value: endDate});
-      searchParams.push({key: 'outStartDate', value: ''});
-      searchParams.push({key: 'outEndDate', value: ''});
+      searchParams.push({ key: 'inStartDate', value: startDate });
+      searchParams.push({ key: 'inEndDate', value: endDate });
+      searchParams.push({ key: 'outStartDate', value: '' });
+      searchParams.push({ key: 'outEndDate', value: '' });
     } else if (dateType === 'out') {
-      searchParams.push({key: 'outStartDate', value: startDate});
-      searchParams.push({key: 'outEndDate', value: endDate});
-      searchParams.push({key: 'inStartDate', value: ''});
-      searchParams.push({key: 'inEndDate', value: ''});
+      searchParams.push({ key: 'outStartDate', value: startDate });
+      searchParams.push({ key: 'outEndDate', value: endDate });
+      searchParams.push({ key: 'inStartDate', value: '' });
+      searchParams.push({ key: 'inEndDate', value: '' });
     }
-    searchParams.push({key: carType.key, value: carType.value});
-    searchParams.push({key: searchOption.key, value: searchOption.value});
+    searchParams.push({ key: carType.key, value: carType.value });
+    searchParams.push({ key: searchOption.key, value: searchOption.value });
     // console.log(searchParams);
     onSearch(searchParams);
   };
@@ -200,11 +219,16 @@ const CarLogTable = ({
 
 
   const calculateStartPage = () => {
-    return (Math.floor(pageIndex  / pageUnit) * pageUnit) + 1;
+    return (Math.floor(pageIndex / pageUnit) * pageUnit) + 1;
   };
 
   const handlStartDateChange = (date) => {
     setStartDate(formatYMD(date));
+    setShowCalendar(false);
+  };
+
+  const handlEndDateChange = (date) => {
+    setEndDate(formatYMD(date));
     setShowCalendar(false);
   };
 
@@ -223,7 +247,7 @@ const CarLogTable = ({
   // const goToPageHandle = (page) => {
   //   // setCurrentPage(page);
   //   gotoPage(page);
-    
+
   // };
 
   // useEffect(() => {
@@ -249,34 +273,56 @@ const CarLogTable = ({
                 <div>
                   <DropdownSearch
                     options={dateOptions}
-                    onSelect={({label, value}) => {setDateType(value)}}
+                    onSelect={({ label, value }) => { setDateType(value) }}
                   />
                 </div>
                 <div className='flex gap-2 items-center'>
                   <div className="relative w-30 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
-                    <input
+                    {/* <input
                       type="text"
                       value={startDate}
-                      onClick={() => {setShowCalendar(!showCalendar)}}
+                      onClick={() => { setShowCalendar(!showCalendar) }}
                       // onChange={(e) => setStartDate(e.target.value)}
                       className="w-full focus:outline-none"
                       placeholder=""
+                    /> */}
+                    <input
+                      type="date"
+                      value={selectedDate} // startDate 대신에 selectedDate를 사용
+                      onChange={handleChange}
+                      className="w-full focus:outline-none"
+                      placeholder="yyyy-mm-dd"
+                      max={getCurrentDate()}
                     />
-                    {showCalendar && (
+                    {/* {showCalendar && (
                       <div className='absolute z-50 top-full left-0 mt-1' ref={calendarRef}>
-                        <Calendar onChange={handlStartDateChange} value={startDate} formatDay={(locale, date) => date.getDate().toString()}/>
+                        <Calendar onChange={handlStartDateChange} value={startDate} formatDay={(locale, date) => date.getDate().toString()} />
                       </div>
-                    )}
+                    )} */}
                   </div>
                   <div>~</div>
                   <div className="w-30 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
-                    <input
+                    {/* <input
                       type="text"
                       value={endDate}
-                      onChange={(e) => setEndDate(e.target.value)}
+                      onClick={() => { setShowCalendar(!showCalendar) }}
+                      // onChange={(e) => setEndDate(e.target.value)}
                       className="w-full focus:outline-none"
                       placeholder=""
                     />
+                    <input
+                      type="date"
+                      value={selectedDate} // startDate 대신에 selectedDate를 사용
+                      onChange={handleChange}
+                      className="w-full focus:outline-none"
+                      placeholder="yyyy-mm-dd"
+                      max={getCurrentDate()}
+                    />
+                    {showCalendar && (
+                      <div className='absolute z-50 top-full left-0 mt-1' ref={calendarRef}>
+                        <Calendar onChange={handlEndDateChange} value={endDate} formatDay={(locale, date) => date.getDate().toString()} />
+                      </div>
+                    )} */}
                   </div>
                 </div>
                 <div className='my-auto'>
@@ -285,7 +331,7 @@ const CarLogTable = ({
                 <div className='mr-4'>
                   <DropdownSearch
                     options={carTypeOption}
-                    onSelect={({label, value}) => {setCarType({...carType, value: value})}}
+                    onSelect={({ label, value }) => { setCarType({ ...carType, value: value }) }}
                   />
                 </div>
               </div>
@@ -296,40 +342,40 @@ const CarLogTable = ({
                 <div className='mr-4'>
                   <DropdownSearch
                     options={searchOptions}
-                    onSelect={({label, value}) => {setSearchOption({...searchOption, key: value})}}
+                    onSelect={({ label, value }) => { setSearchOption({ ...searchOption, key: value }) }}
                   />
                 </div>
                 <div className="w-60 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
                   <input
                     type="text"
                     value={searchOption.value}
-                    onChange={(e) => setSearchOption({...searchOption, value: e.target.value})}
+                    onChange={(e) => setSearchOption({ ...searchOption, value: e.target.value })}
                     className="w-full focus:outline-none"
                     placeholder="Search..."
                     onKeyDown={handleKeyPress}
                   />
                   <svg
-                      className="fill-[#637381] hover:fill-primary cursor-pointer"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 18 18"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      onClick={handleSearch}
-                    >
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M8.25 3C5.3505 3 3 5.3505 3 8.25C3 11.1495 5.3505 13.5 8.25 13.5C11.1495 13.5 13.5 11.1495 13.5 8.25C13.5 5.3505 11.1495 3 8.25 3ZM1.5 8.25C1.5 4.52208 4.52208 1.5 8.25 1.5C11.9779 1.5 15 4.52208 15 8.25C15 11.9779 11.9779 15 8.25 15C4.52208 15 1.5 11.9779 1.5 8.25Z"
-                        fill=""
-                      />
-                      <path
-                        fillRule="evenodd"
-                        clipRule="evenodd"
-                        d="M11.9572 11.9572C12.2501 11.6643 12.7249 11.6643 13.0178 11.9572L16.2803 15.2197C16.5732 15.5126 16.5732 15.9874 16.2803 16.2803C15.9874 16.5732 15.5126 16.5732 15.2197 16.2803L11.9572 13.0178C11.6643 12.7249 11.6643 12.2501 11.9572 11.9572Z"
-                        fill=""
-                      />
-                    </svg>
+                    className="fill-[#637381] hover:fill-primary cursor-pointer"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleSearch}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M8.25 3C5.3505 3 3 5.3505 3 8.25C3 11.1495 5.3505 13.5 8.25 13.5C11.1495 13.5 13.5 11.1495 13.5 8.25C13.5 5.3505 11.1495 3 8.25 3ZM1.5 8.25C1.5 4.52208 4.52208 1.5 8.25 1.5C11.9779 1.5 15 4.52208 15 8.25C15 11.9779 11.9779 15 8.25 15C4.52208 15 1.5 11.9779 1.5 8.25Z"
+                      fill=""
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M11.9572 11.9572C12.2501 11.6643 12.7249 11.6643 13.0178 11.9572L16.2803 15.2197C16.5732 15.5126 16.5732 15.9874 16.2803 16.2803C15.9874 16.5732 15.5126 16.5732 15.2197 16.2803L11.9572 13.0178C11.6643 12.7249 11.6643 12.2501 11.9572 11.9572Z"
+                      fill=""
+                    />
+                  </svg>
                 </div>
               </div>
 
@@ -368,7 +414,7 @@ const CarLogTable = ({
                     >
                       <div className="flex items-center justify-center">
                         <span className='mr-2'> {column.render('Header')}</span>
-                        <SortIcon/>
+                        <SortIcon />
                       </div>
                     </th>
                   ))}
@@ -395,18 +441,18 @@ const CarLogTable = ({
                     <td className='flex gap-3'>
                       {row.original['in'] ? (
                         // <CarLogDetailsModal buttonText={'입차'} id={row.original['in'].id} />
-                        <button 
+                        <button
                           className='text-primary'
-                          onClick={() => {getCarLogDetails(row.original['in'].id)}}
+                          onClick={() => { getCarLogDetails(row.original['in'].id) }}
                         >
                           입차
                         </button>
                       ) : null}
                       {row.original['out'] ? (
                         // <CarLogDetailsModal buttonText={'출차'} id={row.original['out'].id}/>
-                        <button 
+                        <button
                           className='text-primary'
-                          onClick={() => {getCarLogDetails(row.original['out'].id)}}
+                          onClick={() => { getCarLogDetails(row.original['out'].id) }}
                         >
                           출차
                         </button>
@@ -481,12 +527,12 @@ const CarLogTable = ({
                   </svg>
                 </button>
               </div>
-            </div> 
+            </div>
           </div>
         </section>
       </div>
       <div className='basis-1/4'>
-        {loading? <Loader/> : 
+        {loading ? <Loader /> :
           carLogDetails && carLogDetails.files ? carLogDetails.files.map((file, index) => {
             return (
               <span
