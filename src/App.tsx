@@ -48,7 +48,6 @@ function App() {
   ) : (
     <RecoilRoot>
       <Routes>
-
         <Route
           path='/'
           element={
@@ -227,6 +226,17 @@ function App() {
             <>
               <PageTitle title="고객지원 | Support" />
               <Support />
+            </>
+          }
+        />
+
+        {/* 모든 경로 처리 - 최 하단에 넣어야 함. */}
+        <Route
+          path='*'
+          element={
+            <>
+              <PageTitle title="로그인 | Admin - Car Admin Signin" />
+              <SignIn />
             </>
           }
         />
