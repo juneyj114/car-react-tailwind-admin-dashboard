@@ -20,8 +20,8 @@ const SignIn: React.FC = () => {
         password,
       });
 
-      setCookie('accessToken', response.data.accessToken, {path: "/main"});
-      setCookie('refreshToken', response.data.refreshToken, {path: "/main"});
+      setCookie('accessToken', response.data.accessToken, {path: "/"});
+      setCookie('refreshToken', response.data.refreshToken, {path: "/"});
 
       navigate("/main");
     } catch (error) {

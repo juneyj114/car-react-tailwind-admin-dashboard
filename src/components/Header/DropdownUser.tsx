@@ -42,7 +42,7 @@ const DropdownUser = ({
   const logOut = () => {
     removeCookie('accessToken', { path: '/' });
     removeCookie('refreshToken', { path: '/' });
-    navigate("/auth/signin");
+    navigate("/");
   }
 
   return (
