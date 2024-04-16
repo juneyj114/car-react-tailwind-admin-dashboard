@@ -24,7 +24,7 @@ const ModalSave: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [saveData, setSaveData] = useState<SaveData[]>([]);
   const headerData = useRecoilValue(headerState);
-  
+
   const location = useLocation();
   const trigger = useRef<any>(null);
   const modal = useRef<any>(null);
@@ -64,73 +64,78 @@ const ModalSave: React.FC = () => {
     const initialData: SaveData[] = [];
     switch (pathname) {
       case '/admin/apartment':
-        initialData.push({key: 'name', label: '이름', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'region1DepthName', label: '고객사 지역명 1', value: '', valueType: ValueType.Text, visable: false, optional: false});
-        initialData.push({key: 'region2DepthName', label: '고객사 지역명 2', value: '', valueType: ValueType.Text, visable: false, optional: false});
-        initialData.push({key: 'region3DepthName', label: '고객사 지역명 3', value: '', valueType: ValueType.Text, visable: false, optional: false});
-        initialData.push({key: 'roadName', label: '도로명', value: '', valueType: ValueType.Text, visable: false, optional: false});
-        initialData.push({key: 'address', label: '주소', value: '', valueType: ValueType.Address, visable: true, optional: false});
-        initialData.push({key: 'zoneNo', label: '우편번호', value: '', valueType: ValueType.Text, visable: false, optional: false});
-        initialData.push({key: 'limitType', label: '제한 타입', value: 'COUNT', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
-          {
-            label: "횟수",
-            value: "COUNT"
-          },
-          {
-            label: "시간",
-            value: "TIME"
-          },
-          {
-            label: "없음",
-            value: "NONE"
-          }
-        ]});
-        initialData.push({key: 'limitTime', label: '제한 시간(분 단위)', value: '', valueType: ValueType.Number, visable: true, optional: false});
-        initialData.push({key: 'limitCount', label: '제한 횟수', value: '', valueType: ValueType.Number, visable: true, optional: false});
-        initialData.push({key: 'networkCheckSecond', label: '네트워크 체크 시간(초 단위)', value: '', valueType: ValueType.Number, visable: true, optional: false});
-        initialData.push({key: 'qna', label: 'QnA 사용 여부', value: '', valueType: ValueType.Boolean, visable: true, optional: false});
-        initialData.push({key: 'faq', label: 'FAQ 사용 여부', value: '', valueType: ValueType.Boolean, visable: true, optional: false});
+        initialData.push({ key: 'name', label: '이름', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'region1DepthName', label: '고객사 지역명 1', value: '', valueType: ValueType.Text, visable: false, optional: false });
+        initialData.push({ key: 'region2DepthName', label: '고객사 지역명 2', value: '', valueType: ValueType.Text, visable: false, optional: false });
+        initialData.push({ key: 'region3DepthName', label: '고객사 지역명 3', value: '', valueType: ValueType.Text, visable: false, optional: false });
+        initialData.push({ key: 'roadName', label: '도로명', value: '', valueType: ValueType.Text, visable: false, optional: false });
+        initialData.push({ key: 'address', label: '주소', value: '', valueType: ValueType.Address, visable: true, optional: false });
+        initialData.push({ key: 'zoneNo', label: '우편번호', value: '', valueType: ValueType.Text, visable: false, optional: false });
+        initialData.push({
+          key: 'limitType', label: '제한 타입', value: 'COUNT', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
+            {
+              label: "횟수",
+              value: "COUNT"
+            },
+            {
+              label: "시간",
+              value: "TIME"
+            },
+            {
+              label: "없음",
+              value: "NONE"
+            }
+          ]
+        });
+        initialData.push({ key: 'limitTime', label: '제한 시간(분 단위)', value: '', valueType: ValueType.Number, visable: true, optional: false });
+        initialData.push({ key: 'limitCount', label: '제한 횟수', value: '', valueType: ValueType.Number, visable: true, optional: false });
+        initialData.push({ key: 'networkCheckSecond', label: '네트워크 체크 시간(초 단위)', value: '', valueType: ValueType.Number, visable: true, optional: false });
+        initialData.push({ key: 'qna', label: 'QnA 사용 여부', value: '', valueType: ValueType.Boolean, visable: true, optional: false });
+        initialData.push({ key: 'faq', label: 'FAQ 사용 여부', value: '', valueType: ValueType.Boolean, visable: true, optional: false });
         break;
       case '/apartment/unit':
-        initialData.push({key: 'dong', label: '동', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'ho', label: '호', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({ key: 'dong', label: '동', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'ho', label: '호', value: '', valueType: ValueType.Text, visable: true, optional: false });
         break;
       case '/device':
-        initialData.push({key: 'apartmentId', label: '아파트ID', value: '', valueType: ValueType.Number, visable: false, optional: false});
-        initialData.push({key: 'apartmentName', label: '아파트명', value: '', valueType: ValueType.Apartment, visable: true, optional: false});
-        initialData.push({key: 'serialNumber', label: '시리얼 번호', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'macAddress', label: 'MAC 주소', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'modelName', label: '모델명', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'internalIp', label: '내부 IP', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'internalPort', label: '내부 포트', value: '', valueType: ValueType.Number, visable: true, optional: false});
-        initialData.push({key: 'externalIp', label: '외부 IP', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'externalPort', label: '외부 포트', value: '', valueType: ValueType.Number, visable: true, optional: false});
-        initialData.push({key: 'inOutType', label: '카메라 타입', value: '', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
-          {
-            label: "입차",
-            value: "IN"
-          },
-          {
-            label: "출차",
-            value: "OUT"
-          },
-          {
-            label: "입출차",
-            value: "BOTH"
-          }
-        ]});
-        initialData.push({key: 'adminId', label: '어드민 ID', value: '', valueType: ValueType.Text, visable: true, optional: false});
-        initialData.push({key: 'adminPassword', label: '어드민 PW', value: '', valueType: ValueType.Text, visable: true, optional: false});
+        initialData.push({ key: 'apartmentId', label: '아파트ID', value: '', valueType: ValueType.Number, visable: false, optional: false });
+        initialData.push({ key: 'apartmentName', label: '아파트명', value: '', valueType: ValueType.Apartment, visable: true, optional: false });
+        initialData.push({ key: 'serialNumber', label: '시리얼 번호', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'macAddress', label: 'MAC 주소', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'modelName', label: '모델명', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'internalIp', label: '내부 IP', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'internalPort', label: '내부 포트', value: '', valueType: ValueType.Number, visable: true, optional: false });
+        initialData.push({ key: 'externalIp', label: '외부 IP', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'externalPort', label: '외부 포트', value: '', valueType: ValueType.Number, visable: true, optional: false });
+        initialData.push({
+          key: 'inOutType', label: '카메라 타입', value: '', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
+            {
+              label: "입차",
+              value: "IN"
+            },
+            {
+              label: "출차",
+              value: "OUT"
+            },
+            {
+              label: "입출차",
+              value: "BOTH"
+            }
+          ]
+        });
+        initialData.push({ key: 'adminId', label: '어드민 ID', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'adminPassword', label: '어드민 PW', value: '', valueType: ValueType.Text, visable: true, optional: false });
         break;
       case '/car':
-          initialData.push({key: 'apartmentId', label: '아파트ID', value: headerData.apartmentId, valueType: ValueType.Number, visable: false, optional: true});
-          initialData.push({key: 'apartmentName', label: '아파트명', value: headerData.apartmentName, valueType: ValueType.Apartment, visable: false, optional: false});
-          initialData.push({key: 'number', label: '차량번호', value: '', valueType: ValueType.Text, visable: true, optional: false});
-          initialData.push({key: 'phone', label: '전화번호', value: '', valueType: ValueType.Text, visable: true, optional: true});
-          initialData.push({key: 'purpose', label: '메모', value: '', valueType: ValueType.Text, visable: true, optional: true});
-          initialData.push({key: 'startDate', label: '시작일자', value: '', valueType: ValueType.Date, visable: true, optional: false});
-          initialData.push({key: 'endDate', label: '종료일자', value: '', valueType: ValueType.Date, visable: true, optional: false});
-          initialData.push({key: 'type', label: '허용여부', value: 'ALLOW', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
+        initialData.push({ key: 'apartmentId', label: '아파트ID', value: headerData.apartmentId, valueType: ValueType.Number, visable: false, optional: true });
+        initialData.push({ key: 'apartmentName', label: '아파트명', value: headerData.apartmentName, valueType: ValueType.Apartment, visable: false, optional: true });
+        initialData.push({ key: 'number', label: '차량번호', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'phone', label: '전화번호', value: '', valueType: ValueType.Text, visable: true, optional: true });
+        initialData.push({ key: 'purpose', label: '메모', value: '', valueType: ValueType.Text, visable: true, optional: true });
+        initialData.push({ key: 'startDate', label: '시작일자', value: '', valueType: ValueType.Date, visable: true, optional: false });
+        initialData.push({ key: 'endDate', label: '종료일자', value: '', valueType: ValueType.Date, visable: true, optional: false });
+        initialData.push({
+          key: 'type', label: '허용여부', value: 'ALLOW', valueType: ValueType.SelectGroup, visable: true, optional: false, selectGroupValues: [
             {
               label: "허용",
               value: "ALLOW"
@@ -139,13 +144,14 @@ const ModalSave: React.FC = () => {
               label: "금지",
               value: "DENY"
             }
-          ]});
-          break;
-        case '/notice':
-          initialData.push({key: 'title', label: '제목', value: '', valueType: ValueType.Text, visable: true, optional: false});
-          initialData.push({key: 'content', label: '내용', value: '', valueType: ValueType.Content, visable: true, optional: false});
-          initialData.push({key: 'files', label: '첨부파일', value: null, valueType: ValueType.Files, visable: true, optional: false});
-          break;
+          ]
+        });
+        break;
+      case '/notice':
+        initialData.push({ key: 'title', label: '제목', value: '', valueType: ValueType.Text, visable: true, optional: false });
+        initialData.push({ key: 'content', label: '내용', value: '', valueType: ValueType.Content, visable: true, optional: false });
+        initialData.push({ key: 'files', label: '첨부파일', value: null, valueType: ValueType.Files, visable: true, optional: false });
+        break;
       default:
         break;
     }
@@ -162,8 +168,8 @@ const ModalSave: React.FC = () => {
     } else {
       convertedValue = value;
     }
-    
-    tempSaveEditData[index] = {...tempSaveEditData[index], value: convertedValue};
+
+    tempSaveEditData[index] = { ...tempSaveEditData[index], value: convertedValue };
     setSaveData(tempSaveEditData);
   };
 
@@ -208,6 +214,9 @@ const ModalSave: React.FC = () => {
           }
           willSaveData[data.key] = data.value;
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
         break;
       case '/notice':
         saveUrl = saveUrl + import.meta.env.VITE_NOTICE_ENDPOINT;
@@ -219,13 +228,13 @@ const ModalSave: React.FC = () => {
             Array.from(data.value).forEach((el: any) => {
               formData.append('files', el);
             });
-          } else { 
+          } else {
             tempSaveData[data.key] = data.value;
           }
         });
-        formData.append('request', new Blob([JSON.stringify(tempSaveData)], {type: "application/json"}));
+        formData.append('request', new Blob([JSON.stringify(tempSaveData)], { type: "application/json" }));
         willSaveData = formData;
-        
+
         // console.log(headers);
         break;
       default:
@@ -233,8 +242,8 @@ const ModalSave: React.FC = () => {
     }
 
     // console.log(willSaveData);
-    
-    const response = await axios.post(saveUrl , willSaveData, {
+
+    const response = await axios.post(saveUrl, willSaveData, {
       headers: headers
     });
 
@@ -247,24 +256,24 @@ const ModalSave: React.FC = () => {
     const previousInputDate = tempSaveEditData[index].value;
     //  console.log(`{current: ${inputDate}, previous: ${previousInputDate}}`);
 
-     let formattedDate = inputDate.replace(/\D/g, ''); // 숫자가 아닌 문자 제거
-      // 연도에 대해 '-' 추가
-      if(inputDate.length > previousInputDate.length) {
-        if (formattedDate.length > 3) {
-          formattedDate = formattedDate.slice(0, 4) + '-' + formattedDate.slice(4);
-        }
-        // 월에 대해 '-' 추가
-        if (formattedDate.length > 6) {
-          formattedDate = formattedDate.slice(0, 7) + '-' + formattedDate.slice(7);
-        } if (formattedDate.length > 10) {
-          return;
-        }
-      } else {
-        formattedDate = value;  
+    let formattedDate = inputDate.replace(/\D/g, ''); // 숫자가 아닌 문자 제거
+    // 연도에 대해 '-' 추가
+    if (inputDate.length > previousInputDate.length) {
+      if (formattedDate.length > 3) {
+        formattedDate = formattedDate.slice(0, 4) + '-' + formattedDate.slice(4);
       }
+      // 월에 대해 '-' 추가
+      if (formattedDate.length > 6) {
+        formattedDate = formattedDate.slice(0, 7) + '-' + formattedDate.slice(7);
+      } if (formattedDate.length > 10) {
+        return;
+      }
+    } else {
+      formattedDate = value;
+    }
 
-      tempSaveEditData[index] = {...tempSaveEditData[index], value: formattedDate};
-      setSaveData(tempSaveEditData);
+    tempSaveEditData[index] = { ...tempSaveEditData[index], value: formattedDate };
+    setSaveData(tempSaveEditData);
   };
 
 
@@ -278,9 +287,8 @@ const ModalSave: React.FC = () => {
         추가
       </button>
       <div
-        className={`fixed left-0 top-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5 ${
-          modalOpen ? 'block' : 'hidden'
-        }`}
+        className={`fixed left-0 top-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5 ${modalOpen ? 'block' : 'hidden'
+          }`}
       >
         <div
           ref={modal}
@@ -329,16 +337,16 @@ const ModalSave: React.FC = () => {
                       />
                     )}
                     {data.valueType === ValueType.SelectGroup && (
-                      <SelectGroup selectGroupValues={data.selectGroupValues} saveData={saveData} setSaveData={setSaveData} saveKey={data.key}/>
+                      <SelectGroup selectGroupValues={data.selectGroupValues} saveData={saveData} setSaveData={setSaveData} saveKey={data.key} />
                     )}
                     {data.valueType === ValueType.Date && (
                       <input
-                      type="text"
-                      placeholder="2024-01-01"
-                      value={data.value ? data.value : ''}
-                      onChange={(e) => handleDateChange(index, e.target.value)}
-                      className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
-                    />
+                        type="text"
+                        placeholder="2024-01-01"
+                        value={data.value ? data.value : ''}
+                        onChange={(e) => handleDateChange(index, e.target.value)}
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      />
                     )}
                     {data.valueType === ValueType.Boolean && (
                       <div>
@@ -371,11 +379,11 @@ const ModalSave: React.FC = () => {
                       <ModalApartment saveData={saveData} setSaveData={setSaveData}/>
                     )} */}
                     {data.valueType === ValueType.Files && (
-                      <input 
+                      <input
                         type='file'
                         multiple={true}
-                        onChange={(e) => {handleChange(index, e.target.files, e.target.type)}}
-                      > 
+                        onChange={(e) => { handleChange(index, e.target.files, e.target.type) }}
+                      >
                       </input>
                     )}
                   </div>

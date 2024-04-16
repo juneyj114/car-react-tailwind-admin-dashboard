@@ -65,7 +65,7 @@ const CarDataTable = ({
     gotoPage,
   } = tableInstance;
 
-  const { globalFilter, pageIndex, pageSize } = state;
+  const { globalFilter, pageIndex, pageSize } = state;  
 
   // const detailsHandler = (id) => {};
   // const editHandler = (id) => {};

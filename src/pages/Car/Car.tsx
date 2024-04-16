@@ -346,7 +346,7 @@ const Car: React.FC = () => {
           <CarDataTable tableData={carData} column={deviceCameraColumns} onSearch={getCarLog} editHandler={editHandler} deleteHandler={deleteHandler} />
         )}
       </div>
-      <ModalSave/>
+      <ModalSave />
     </DefaultLayout>
   );
 };

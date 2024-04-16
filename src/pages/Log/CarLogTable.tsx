@@ -46,12 +46,13 @@ const CarLogTable = ({
   // 리액트 캘린더 대신 사용한 상태관리 및 함수
   const [startDate, setStartDate] = useRecoilState(dateType === 'in' ? startDateState : endDateState);
 
-  const [selectedDate, setSelectedDate] = useState(startDate); // 선택한 날짜를 관리하기 위한 상태 추가
+  const [selectedStartDate, setSelectedStartDate] = useState(startDate); // 선택한 날짜를 관리하기 위한 상태 추가
+  const [selectedEndDate, setSelectedEndDate] = useState(endDate); // 선택한 날짜를 관리하기 위한 상태 추가
 
-  const handleChange = (event) => {
+  const handleChange = (event, setDate) => {
     const selectedValue = event.target.value;
-    setStartDate(selectedValue);
-    setSelectedDate(selectedValue); // 선택한 날짜 업데이트
+    // setDate(selectedValue);
+    setDate(selectedValue); // 선택한 날짜 업데이트
   };
 
   // 현재 날짜를 yyyy-mm-dd 형식으로 가져오는 함수
@@ -103,7 +104,7 @@ const CarLogTable = ({
 
   const { globalFilter, pageIndex, pageSize } = state;
 
-  state.pageSize = 10;
+  // state.pageSize = 10;
 
 
   const carLogUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_LOG_ENDPOINT;
@@ -164,19 +165,19 @@ const CarLogTable = ({
   const handleSearch = () => {
     const searchParams = [];
     if (dateType === 'in') {
-      searchParams.push({ key: 'inStartDate', value: startDate });
-      searchParams.push({ key: 'inEndDate', value: endDate });
+      searchParams.push({ key: 'inStartDate', value: selectedStartDate });
+      searchParams.push({ key: 'inEndDate', value: selectedEndDate });
       searchParams.push({ key: 'outStartDate', value: '' });
       searchParams.push({ key: 'outEndDate', value: '' });
     } else if (dateType === 'out') {
-      searchParams.push({ key: 'outStartDate', value: startDate });
-      searchParams.push({ key: 'outEndDate', value: endDate });
+      searchParams.push({ key: 'outStartDate', value: selectedStartDate });
+      searchParams.push({ key: 'outEndDate', value: selectedEndDate });
       searchParams.push({ key: 'inStartDate', value: '' });
       searchParams.push({ key: 'inEndDate', value: '' });
     }
     searchParams.push({ key: carType.key, value: carType.value });
     searchParams.push({ key: searchOption.key, value: searchOption.value });
-    // console.log(searchParams);
+    console.log(searchParams);
     onSearch(searchParams);
   };
 
@@ -277,7 +278,7 @@ const CarLogTable = ({
                   />
                 </div>
                 <div className='flex gap-2 items-center'>
-                  <div className="relative w-30 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
+                  <div className="relative w-34 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
                     {/* <input
                       type="text"
                       value={startDate}
@@ -288,8 +289,8 @@ const CarLogTable = ({
                     /> */}
                     <input
                       type="date"
-                      value={selectedDate} // startDate 대신에 selectedDate를 사용
-                      onChange={handleChange}
+                      value={selectedStartDate} // startDate 대신에 selectedDate를 사용
+                      onChange={(event) => {handleChange(event, setSelectedStartDate)}}
                       className="w-full focus:outline-none"
                       placeholder="yyyy-mm-dd"
                       max={getCurrentDate()}
@@ -301,7 +302,7 @@ const CarLogTable = ({
                     )} */}
                   </div>
                   <div>~</div>
-                  <div className="w-30 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
+                  <div className="w-34 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
                     {/* <input
                       type="text"
                       value={endDate}
@@ -312,8 +313,8 @@ const CarLogTable = ({
                     /> */}
                     <input
                       type="date"
-                      value={selectedDate} // startDate 대신에 selectedDate를 사용
-                      onChange={handleChange}
+                      value={selectedEndDate} // startDate 대신에 selectedDate를 사용
+                      onChange={(event) => {handleChange(event, setSelectedEndDate)}}
                       className="w-full focus:outline-none"
                       placeholder="yyyy-mm-dd"
                       max={getCurrentDate()}
