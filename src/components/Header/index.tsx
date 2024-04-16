@@ -70,7 +70,7 @@ const Header = (props: {
         <div className="flex flex-grow items-center justify-between px-4 py-4 shadow-2 md:px-6 2xl:px-11">
           {/* <!-- SIDEBAR HEADER --> */}
           <div className="flex items-center justify-between">
-            <NavLink to="/">
+            <NavLink to="/main">
               <img src={Logo} alt="Logo" className='h-8' />
             </NavLink>
           </div>
@@ -119,7 +119,7 @@ const Header = (props: {
             </button>
             {/* <!-- Hamburger Toggle BTN --> */}
 
-            <Link className="block flex-shrink-0 lg:hidden" to="/">
+            <Link className="block flex-shrink-0 lg:hidden" to="/main">
               <img src={LogoIcon} alt="Logo" />
             </Link>
           </div>

@@ -20,8 +20,8 @@ const SignIn: React.FC = () => {
         password,
       });
 
-      setCookie('accessToken', response.data.accessToken, {path: "/"});
-      setCookie('refreshToken', response.data.refreshToken, {path: "/"});
+      setCookie('accessToken', response.data.accessToken, {path: "/main"});
+      setCookie('refreshToken', response.data.refreshToken, {path: "/main"});
 
       navigate("/main");
     } catch (error) {
@@ -49,7 +49,7 @@ const SignIn: React.FC = () => {
                 로그인
               </h2> */}
 
-              <form action={"/"} onSubmit={onSubmit}>
+              <form action={"/main"} onSubmit={onSubmit}>
                 <div className='flex flex-col gap-4 justify-center items-center'>
                   <div className='mb-3'>
                     <img className="w-48" src={Logo} alt="Logo" />
