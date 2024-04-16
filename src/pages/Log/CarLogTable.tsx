@@ -177,7 +177,7 @@ const CarLogTable = ({
     }
     searchParams.push({ key: carType.key, value: carType.value });
     searchParams.push({ key: searchOption.key, value: searchOption.value });
-    console.log(searchParams);
+    // console.log(searchParams);
     onSearch(searchParams);
   };
 

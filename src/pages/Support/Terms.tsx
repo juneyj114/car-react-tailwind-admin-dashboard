@@ -1,6 +1,6 @@
 const Terms = () => {
     return (
-        <pre className="text-pretty text-sm">
+        <pre className="break-words text-pretty text-sm">
             {`제1장 총칙
 
 제1조 (목적)
