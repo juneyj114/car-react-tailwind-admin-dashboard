@@ -6,9 +6,9 @@ const Loader = () => {
       {/* <div className="h-16 w-16 animate-spin rounded-full border-4 border-solid border-primary border-t-transparent"></div> */}
       <ScaleLoader
         color="#2241F2"
-        height={12}
-        speedMultiplier={0.5}
-        width={70}
+        height={25}
+        speedMultiplier={1}
+        width={13}
       />
     </div>
   );

@@ -164,17 +164,19 @@ const CarLogTable = ({
 
   const handleSearch = () => {
     const searchParams = [];
-    if (dateType === 'in') {
-      searchParams.push({ key: 'inStartDate', value: selectedStartDate });
-      searchParams.push({ key: 'inEndDate', value: selectedEndDate });
-      searchParams.push({ key: 'outStartDate', value: '' });
-      searchParams.push({ key: 'outEndDate', value: '' });
-    } else if (dateType === 'out') {
-      searchParams.push({ key: 'outStartDate', value: selectedStartDate });
-      searchParams.push({ key: 'outEndDate', value: selectedEndDate });
-      searchParams.push({ key: 'inStartDate', value: '' });
-      searchParams.push({ key: 'inEndDate', value: '' });
-    }
+    searchParams.push({ key: 'startDate', value: selectedStartDate });
+    searchParams.push({ key: 'endDate', value: selectedEndDate });
+    // if (dateType === 'in') {
+    //   searchParams.push({ key: 'inStartDate', value: selectedStartDate });
+    //   searchParams.push({ key: 'inEndDate', value: selectedEndDate });
+    //   searchParams.push({ key: 'outStartDate', value: '' });
+    //   searchParams.push({ key: 'outEndDate', value: '' });
+    // } else if (dateType === 'out') {
+    //   searchParams.push({ key: 'outStartDate', value: selectedStartDate });
+    //   searchParams.push({ key: 'outEndDate', value: selectedEndDate });
+    //   searchParams.push({ key: 'inStartDate', value: '' });
+    //   searchParams.push({ key: 'inEndDate', value: '' });
+    // }
     searchParams.push({ key: carType.key, value: carType.value });
     searchParams.push({ key: searchOption.key, value: searchOption.value });
     // console.log(searchParams);
@@ -268,18 +270,50 @@ const CarLogTable = ({
     <div className='flex gap-7'>
       <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10 basis-3/4">
         <section className="data-table-common data-table-two rounded-sm border border-stroke bg-white py-4 shadow-default text-xs dark:border-strokedark  dark:bg-boxdark">
-          <div className='flex flex-col gap-3 px-8'>
+          <div className='flex flex-col gap-3 px-8 mb-3'>
             <div>
-              <div className='flex gap-4'>
-                <div>
+              <div className='flex items-center justify-between mb-2'>
+                <div className='text-xl font-semibold'>검색기준</div>
+                <div className="flex items-center font-medium">
+                  <div
+                    className='cursor-pointer mr-2'
+                    onClick={excelDownload}
+                  >
+                    <img src={ExcelLogo} />
+                  </div>
+                  <select
+                    value={pageSize}
+                    onChange={(e) => setPageSize(Number(e.target.value))}
+                    className="bg-transparent pl-2"
+                  >
+                    {[5, 10, 20, 50].map((page) => (
+                      <option key={page} value={page}>
+                        {page}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+              <div className='flex items-center justify-center px-14 py-2.5'>
+                <div className='flex gap-4 w-full'>
+                  <div className='my-auto font-semibold text-sm text-blue-800'>
+                    차량현황
+                  </div>
+                  <div>
+                    <DropdownSearch
+                      options={carTypeOption}
+                      onSelect={({ label, value }) => { setCarType({ ...carType, value: value }) }}
+                    />
+                  </div>
+                  {/* <div>
                   <DropdownSearch
                     options={dateOptions}
                     onSelect={({ label, value }) => { setDateType(value) }}
                   />
-                </div>
-                <div className='flex gap-2 items-center'>
-                  <div className="relative w-34 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
-                    {/* <input
+                </div> */}
+                  <div className='flex gap-2 items-center'>
+                    <div className="relative w-40 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
+                      {/* <input
                       type="text"
                       value={startDate}
                       onClick={() => { setShowCalendar(!showCalendar) }}
@@ -287,23 +321,23 @@ const CarLogTable = ({
                       className="w-full focus:outline-none"
                       placeholder=""
                     /> */}
-                    <input
-                      type="date"
-                      value={selectedStartDate} // startDate 대신에 selectedDate를 사용
-                      onChange={(event) => {handleChange(event, setSelectedStartDate)}}
-                      className="w-full focus:outline-none"
-                      placeholder="yyyy-mm-dd"
-                      max={getCurrentDate()}
-                    />
-                    {/* {showCalendar && (
+                      <input
+                        type="date"
+                        value={selectedStartDate} // startDate 대신에 selectedDate를 사용
+                        onChange={(event) => { handleChange(event, setSelectedStartDate) }}
+                        className="w-full focus:outline-none"
+                        placeholder="yyyy-mm-dd"
+                        max={getCurrentDate()}
+                      />
+                      {/* {showCalendar && (
                       <div className='absolute z-50 top-full left-0 mt-1' ref={calendarRef}>
                         <Calendar onChange={handlStartDateChange} value={startDate} formatDay={(locale, date) => date.getDate().toString()} />
                       </div>
                     )} */}
-                  </div>
-                  <div>~</div>
-                  <div className="w-34 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
-                    {/* <input
+                    </div>
+                    <div>~</div>
+                    <div className="w-40 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
+                      {/* <input
                       type="text"
                       value={endDate}
                       onClick={() => { setShowCalendar(!showCalendar) }}
@@ -311,101 +345,55 @@ const CarLogTable = ({
                       className="w-full focus:outline-none"
                       placeholder=""
                     /> */}
-                    <input
-                      type="date"
-                      value={selectedEndDate} // startDate 대신에 selectedDate를 사용
-                      onChange={(event) => {handleChange(event, setSelectedEndDate)}}
-                      className="w-full focus:outline-none"
-                      placeholder="yyyy-mm-dd"
-                      max={getCurrentDate()}
-                    />
-                    {/* {showCalendar && (
+                      <input
+                        type="date"
+                        value={selectedEndDate} // startDate 대신에 selectedDate를 사용
+                        onChange={(event) => { handleChange(event, setSelectedEndDate) }}
+                        className="w-full focus:outline-none"
+                        placeholder="yyyy-mm-dd"
+                        max={getCurrentDate()}
+                      />
+                      {/* {showCalendar && (
                       <div className='absolute z-50 top-full left-0 mt-1' ref={calendarRef}>
                         <Calendar onChange={handlEndDateChange} value={endDate} formatDay={(locale, date) => date.getDate().toString()} />
                       </div>
                     )} */}
+                    </div>
+                  </div>
+                  {/* <div className='my-auto'>
+                  차량번호
+                </div> */}
+                  <div className='flex'>
+                    <div className='mr-4'>
+                      <div className="w-60 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
+                        <input
+                          type="text"
+                          value={searchOption.value}
+                          onChange={(e) => setSearchOption({ ...searchOption, value: e.target.value })}
+                          className="w-full focus:outline-none"
+                          placeholder="차량번호..."
+                          onKeyDown={handleKeyPress}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <button
+                        type='button'
+                        onClick={handleSearch}
+                        className="inline-flex items-center justify-center rounded-md bg-primary w-full h-full px-5 text-center font-medium text-white hover:bg-opacity-90 lg:px"
+                      >검색</button>
+                    </div>
                   </div>
                 </div>
-                <div className='my-auto'>
-                  차량구분
-                </div>
-                <div className='mr-4'>
-                  <DropdownSearch
-                    options={carTypeOption}
-                    onSelect={({ label, value }) => { setCarType({ ...carType, value: value }) }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-between border-b border-stroke pb-4 dark:border-strokedark">
-              <div className='flex'>
-                <div className='mr-4'>
-                  <DropdownSearch
-                    options={searchOptions}
-                    onSelect={({ label, value }) => { setSearchOption({ ...searchOption, key: value }) }}
-                  />
-                </div>
-                <div className="w-60 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
-                  <input
-                    type="text"
-                    value={searchOption.value}
-                    onChange={(e) => setSearchOption({ ...searchOption, value: e.target.value })}
-                    className="w-full focus:outline-none"
-                    placeholder="Search..."
-                    onKeyDown={handleKeyPress}
-                  />
-                  <svg
-                    className="fill-[#637381] hover:fill-primary cursor-pointer"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 18 18"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                    onClick={handleSearch}
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M8.25 3C5.3505 3 3 5.3505 3 8.25C3 11.1495 5.3505 13.5 8.25 13.5C11.1495 13.5 13.5 11.1495 13.5 8.25C13.5 5.3505 11.1495 3 8.25 3ZM1.5 8.25C1.5 4.52208 4.52208 1.5 8.25 1.5C11.9779 1.5 15 4.52208 15 8.25C15 11.9779 11.9779 15 8.25 15C4.52208 15 1.5 11.9779 1.5 8.25Z"
-                      fill=""
-                    />
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M11.9572 11.9572C12.2501 11.6643 12.7249 11.6643 13.0178 11.9572L16.2803 15.2197C16.5732 15.5126 16.5732 15.9874 16.2803 16.2803C15.9874 16.5732 15.5126 16.5732 15.2197 16.2803L11.9572 13.0178C11.6643 12.7249 11.6643 12.2501 11.9572 11.9572Z"
-                      fill=""
-                    />
-                  </svg>
-                </div>
               </div>
 
-              <div className="flex items-center font-medium">
-                <div
-                  className='cursor-pointer mr-2'
-                  onClick={excelDownload}
-                >
-                  <img src={ExcelLogo} />
-                </div>
-                <select
-                  value={pageSize}
-                  onChange={(e) => setPageSize(Number(e.target.value))}
-                  className="bg-transparent pl-2"
-                >
-                  {[5, 10, 20, 50].map((page) => (
-                    <option key={page} value={page}>
-                      {page}
-                    </option>
-                  ))}
-                </select>
-              </div>
             </div>
           </div>
           <table
             {...getTableProps()}
             className="text-center datatable-table w-full table-auto border-collapse overflow-hidden break-words px-4 /*md:table-fixed*/ md:overflow-auto md:px-8"
           >
-            <thead>
+            <thead className='bg-indigo-50'>
               {headerGroups.map((headerGroup, key) => (
                 <tr {...headerGroup.getHeaderGroupProps()} key={key}>
                   {headerGroup.headers.map((column, key) => (
@@ -414,7 +402,7 @@ const CarLogTable = ({
                       key={key}
                     >
                       <div className="flex items-center justify-center">
-                        <span className='mr-2'> {column.render('Header')}</span>
+                        <span className='mr-2 font-semibold text-sm'> {column.render('Header')}</span>
                         <SortIcon />
                       </div>
                     </th>

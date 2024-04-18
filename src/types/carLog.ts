@@ -4,7 +4,8 @@ export enum CarLogType {
   ALL = 'ALL',
   VISIT = 'VISIT',
   MEMBER = 'MEMBER',
-  UNKNOWN = 'UNKNOWN'
+  UNKNOWN = 'UNKNOWN',
+  UNREGISTER = 'UNREGISTER'
 }
 
 export enum InOutType {
