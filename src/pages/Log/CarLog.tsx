@@ -128,7 +128,7 @@ const CarLog: React.FC = () => {
     // console.log(params);
 
     try {
-      setLoading(true);
+      // setLoading(true);
       const response = await axios.get(carLogUrl, {
         headers: {
           Authorization: cookies.accessToken
@@ -184,7 +184,7 @@ const CarLog: React.FC = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -192,13 +192,16 @@ const CarLog: React.FC = () => {
     getAllCarLog();
   }, []);
 
-  console.log(carLog, '데이터');
-  
+  // console.log(carLog, '데이터');
+
   const apartmentColumns = [
     { Header: '차량구분', accessor: 'typeText' },
-    { Header: '차량번호', accessor: 'in.vehicleNumber' },
-    { 
-      Header: '동/호수', 
+    {
+      Header: '차량번호',
+      accessor: (row) => row.originVehicleNumber ? row.originVehicleNumber : row.in.vehicleNumber
+    },
+    {
+      Header: '동/호수',
       accessor: (row) => (row.dong && row.ho) ? `${row.dong}동 ${row.ho}호` : '-'
     },
     { Header: '입차일시', accessor: 'in.inOutTime' },

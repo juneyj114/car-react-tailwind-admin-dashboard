@@ -60,7 +60,7 @@ const DropdownSearch: React.FC<DropdownProp> = ({ options, onSelect }) => {
             ref={trigger}
             onClick={() => setDropdownOpen(!dropdownOpen)}
             to="#"
-            className="w-40 inline-flex justify-between items-center gap-2.5 rounded-md border border-stroke py-2.5 px-5.5 hover:bg-opacity-90"
+            className="w-30 inline-flex justify-between items-center gap-2.5 rounded-md border border-stroke py-2.5 px-5.5 hover:bg-opacity-90"
           >
             {selectedOption ? selectedOption.label : '없음'}
             <svg

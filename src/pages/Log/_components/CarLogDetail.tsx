@@ -43,7 +43,7 @@ const CarLogDetail = () => {
             setLoading(false);
         }
     };
-    console.log(carLogInDetails, '상세');
+    // console.log(carLogInDetails, '상세');
 
     return (
         <div className='basis-1/4 relative h-full'>
