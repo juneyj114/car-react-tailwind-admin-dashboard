@@ -50,17 +50,16 @@ const CarLog: React.FC = () => {
           size: 9999,
           number: '',
           type: CarLogType.ALL,
-          startDate: '2024-04-01',
-          endDate: '2024-04-17',
-          inStartDate: startDate,
-          inEndDate: endDate,
-          outEndDate: '',
-          outStartDate: '',
+          startDate: startDate,
+          endDate: endDate,
+          // inStartDate: startDate,
+          // inEndDate: endDate,
+          // outEndDate: '',
+          // outStartDate: '',
           sort: 'createDate,desc'
         } as CarLogParam
       });
 
-      console.log(response, 'log');
       // const repsonseCarLog: Pageable<ICarLog[]> = response.data;
       // console.log(repsonseCarLog.content, '얼안ㅁㄹ');
 
@@ -108,18 +107,16 @@ const CarLog: React.FC = () => {
         content: repsonseCarLog
       }));
 
-      
+
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
-    
+
   }
-  console.log(carLog, '떠줘..');
 
   const getCarLog = async (searchOptions: SearchOption[]) => {
-    console.log(searchOptions, '엥');
     const params = {
       page: pageNumber,
       size: pageSize,
@@ -140,25 +137,50 @@ const CarLog: React.FC = () => {
         params
       });
 
-      const repsonseCarLog: Pageable<ICarLog[]> = response.data;
-      console.log(repsonseCarLog, '로그3');
-      repsonseCarLog.content = repsonseCarLog.content.map(c => {
+      // const repsonseCarLog: Pageable<ICarLog[]> = response.data;
+      // console.log(repsonseCarLog, '로그3');
+      // repsonseCarLog.content = repsonseCarLog.content.map(c => {
+      //   switch (c.type) {
+      //     case CarLogType.MEMBER:
+      //       return { ...c, typeText: '세대차량' };
+      //     case CarLogType.VISIT:
+      //       return { ...c, typeText: '방문차량' };
+      //     case CarLogType.UNKNOWN:
+      //       return { ...c, typeText: '미인식차량' };
+      //     case CarLogType.UNREGISTER:
+      //       return { ...c, typeText: '미등록차량' };
+      //     default:
+      //       return c;
+      //   }
+      // });
+
+      // setCarLog(repsonseCarLog);
+      const repsonseCarLog: ICarLog[] = response.data;
+
+      repsonseCarLog.forEach(c => {
         switch (c.type) {
           case CarLogType.MEMBER:
-            return { ...c, typeText: '세대차량' };
+            c.typeText = '세대차량';
+            break;
           case CarLogType.VISIT:
-            return { ...c, typeText: '방문차량' };
+            c.typeText = '방문차량';
+            break;
           case CarLogType.UNKNOWN:
-            return { ...c, typeText: '미인식차량' };
+            c.typeText = '미인식차량';
+            break;
           case CarLogType.UNREGISTER:
-            return { ...c, typeText: '미등록차량' };
+            c.typeText = '미등록차량';
+            break;
           default:
-            return c;
+            break;
         }
       });
 
-      setCarLog(repsonseCarLog);
-      console.log(carLog, '카로그');
+      // setCarLog(repsonseCarLog);
+      setCarLog(prevState => ({
+        ...prevState,
+        content: repsonseCarLog
+      }));
 
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -171,9 +193,15 @@ const CarLog: React.FC = () => {
     getAllCarLog();
   }, []);
 
+  console.log(carLog, '데이터');
+  
   const apartmentColumns = [
     { Header: '차량구분', accessor: 'typeText' },
     { Header: '차량번호', accessor: 'in.vehicleNumber' },
+    { 
+      Header: '동/호수', 
+      accessor: (row) => (row.dong && row.ho) ? `${row.dong}동 ${row.ho}호` : '-'
+    },
     { Header: '입차일시', accessor: 'in.inOutTime' },
     { Header: '출차일시', accessor: 'out.inOutTime' },
     // { Header: '출차 차량번호', accessor: 'out.vehicleNumber'},

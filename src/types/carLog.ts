@@ -19,6 +19,7 @@ export interface CarLogInOut {
   apartment: ApartmentData;
   inOutType: InOutType;
   inOutTime: string;
+  type: CarLogType;
   vehicleNumber: string;
 }
 

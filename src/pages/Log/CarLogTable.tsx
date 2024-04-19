@@ -31,7 +31,8 @@ const CarLogTable = ({
   const data = useMemo(() => tableData, [tableData]);
   const [cookies] = useCookies(['accessToken', 'refreshToken']);
   const [loading, setLoading] = useState<boolean>(false);
-  const [carLogDetails, setCarLogDetails] = useState<CarLogDetails>();
+  const [carLogInDetails, setCarLogInDetails] = useState<CarLogDetails>();
+  const [carLogOutDetails, setCarLogOutDetails] = useState<CarLogDetails>();
   const [searchOption, setSearchOption] = useState({ key: 'number', value: '' });
   // const [startDate, setStartDate] = useRecoilState(startDateState);
   const [endDate, setEndDate] = useRecoilState(endDateState);
@@ -42,6 +43,8 @@ const CarLogTable = ({
   const [showCalendar, setShowCalendar] = useState(false);
   const calendarRef = useRef(null);
   // const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedRowIndex, setSelectedRowIndex] = useState(null); // 선택된 행의 인덱스
+  const [showDetails, setShowDetails] = useState(false); // 행의 세부 정보 표시 여부
 
   // 리액트 캘린더 대신 사용한 상태관리 및 함수
   const [startDate, setStartDate] = useRecoilState(dateType === 'in' ? startDateState : endDateState);
@@ -109,7 +112,7 @@ const CarLogTable = ({
 
   const carLogUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_LOG_ENDPOINT;
 
-  const getCarLogDetails = async (id) => {
+  const getCarLogInDetails = async (id) => {
     try {
       setLoading(true);
       const response = await axios.get(`${carLogUrl}/${id}`, {
@@ -117,13 +120,30 @@ const CarLogTable = ({
           Authorization: cookies.accessToken
         }
       });
-      setCarLogDetails(response.data);
+      setCarLogInDetails(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
       setLoading(false);
     }
   };
+  const getCarLogOutDetails = async (id) => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${carLogUrl}/${id}`, {
+        headers: {
+          Authorization: cookies.accessToken
+        }
+      });
+      setCarLogOutDetails(response.data);
+      setCarLogInDetails(null)
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  console.log(carLogInDetails, '상세');
 
   const excelDownload = () => {
     // console.log(data);
@@ -215,8 +235,12 @@ const CarLogTable = ({
       value: 'VISIT'
     },
     {
-      label: '미등록',
+      label: '미인식',
       value: 'UNKNOWN'
+    },
+    {
+      label: '미등록',
+      value: 'UNREGISTER'
     },
   ];
 
@@ -266,8 +290,11 @@ const CarLogTable = ({
   //   }
   // }, [pageIndex]);
 
+  // console.log(carLogInDetails.type, 'type');
+
+
   return (
-    <div className='flex gap-7'>
+    <div className='flex gap-7 relative'>
       <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10 basis-3/4">
         <section className="data-table-common data-table-two rounded-sm border border-stroke bg-white py-4 shadow-default text-xs dark:border-strokedark  dark:bg-boxdark">
           <div className='flex flex-col gap-3 px-8 mb-3'>
@@ -294,11 +321,11 @@ const CarLogTable = ({
                   </select>
                 </div>
               </div>
-              <div className='flex items-center justify-center px-14 py-2.5'>
+              <div className='flex items-center justify-center px-21.5 py-2.5'>
                 <div className='flex gap-4 w-full'>
-                  <div className='my-auto font-semibold text-sm text-blue-800'>
+                  {/* <div className='my-auto font-semibold text-sm text-blue-800'>
                     차량현황
-                  </div>
+                  </div> */}
                   <div>
                     <DropdownSearch
                       options={carTypeOption}
@@ -407,11 +434,11 @@ const CarLogTable = ({
                       </div>
                     </th>
                   ))}
-                  <th >
+                  {/* <th >
                     <div className="flex items-center justify-center">
                       사진
                     </div>
-                  </th>
+                  </th> */}
                 </tr>
               ))}
             </thead>
@@ -419,7 +446,21 @@ const CarLogTable = ({
               {page.map((row, key) => {
                 prepareRow(row);
                 return (
-                  <tr {...row.getRowProps()} key={key}>
+                  <tr
+                    {...row.getRowProps()}
+                    key={key}
+                    onClick={() => {
+                      setSelectedRowIndex(key); // 선택된 행의 인덱스 업데이트
+                      if (row.original['in']) {
+                        getCarLogInDetails(row.original['in'].id); // 입차 정보가 있는 경우 해당 정보의 ID를 전달하여 함수 실행
+                      }
+                      if (row.original['out']) {
+                        getCarLogOutDetails(row.original['out'].id); // 출차 정보가 있는 경우 해당 정보의 ID를 전달하여 함수 실행
+                      }
+                      setCarLogOutDetails(null);
+                    }}
+                    className={selectedRowIndex === key ? 'bg-violet-50' : ''}
+                  >
                     {row.cells.map((cell, key) => {
                       return (
                         <td {...cell.getCellProps()} key={key}>
@@ -427,12 +468,12 @@ const CarLogTable = ({
                         </td>
                       );
                     })}
-                    <td className='flex gap-3'>
+                    {/* <td className='flex gap-3'>
                       {row.original['in'] ? (
                         // <CarLogDetailsModal buttonText={'입차'} id={row.original['in'].id} />
                         <button
                           className='text-primary'
-                          onClick={() => { getCarLogDetails(row.original['in'].id) }}
+                          onClick={() => { getCarLogInDetails(row.original['in'].id) }}
                         >
                           입차
                         </button>
@@ -441,12 +482,12 @@ const CarLogTable = ({
                         // <CarLogDetailsModal buttonText={'출차'} id={row.original['out'].id}/>
                         <button
                           className='text-primary'
-                          onClick={() => { getCarLogDetails(row.original['out'].id) }}
+                          onClick={() => { getCarLogInDetails(row.original['out'].id) }}
                         >
                           출차
                         </button>
                       ) : null}
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}
@@ -454,8 +495,8 @@ const CarLogTable = ({
           </table>
 
           <div className="flex justify-between items-center border-t border-stroke px-8 pt-5 dark:border-strokedark">
-            <p className="font-medium">
-              총 {data.length}건
+            <p className="font-medium text-lg font-semibold">
+              총 <span className='text-indigo-500'>{data.length}</span>건
             </p>
             <div className='flex items-center'>
               <p className="font-medium mr-2">
@@ -520,23 +561,102 @@ const CarLogTable = ({
           </div>
         </section>
       </div>
-      <div className='basis-1/4'>
-        {loading ? <Loader /> :
-          carLogDetails && carLogDetails.files ? carLogDetails.files.map((file, index) => {
-            return (
-              <span
-                className="pl-3"
-                key={index}
-              >
-                <img src={`data:image/jpg;base64,${file.content}`}></img>
-              </span>
-            );
-          }) : (
-            null
-          )
-        }
+      {/* <div className='basis-1/4 h-full relative'> */}
+      <div className={`basis-1/4 h-full ${carLogInDetails && carLogInDetails.type && carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'relative'}`}>
+        <div className={`flex flex-col gap-5 md:gap-7 2xl:gap-3 ${carLogInDetails && carLogInDetails.type && carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'fixed'}`}>
+          {/* <div className="fixed flex flex-col gap-5 md:gap-7 2xl:gap-3"> */}
+          <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="text-lg font-semibold mb-2">입차 이미지</div>
+            <div className="flex flex-wrap gap-4">
+              {loading ? (
+                null
+              ) : carLogInDetails && carLogInDetails.files ? (
+                <>
+                  {/* <div className='flex w-full justify-between items-center'> */}
+                  <div className={`w-full justify-between items-center ${carLogInDetails && carLogInDetails.type === 'UNKNOWN' ? '' : 'flex'}`}>
+                    <div className='text-left'>
+                      <div className='text-indigo-500 font-semibold text-lg'>
+                        {carLogInDetails && carLogInDetails.type === 'MEMBER' ? '세대' :
+                          carLogInDetails.type === 'VISIT' ? '방문' :
+                            carLogInDetails.type === 'UNKNOWN' ? '미인식' :
+                              carLogInDetails.type === 'UNREGISTER' ? '미등록' : ''}
+                      </div>
+                      <div>
+                        {carLogInDetails.inOutTime}
+                      </div>
+                    </div>
+                    <div>
+                      <img
+                        src={`data:image/jpg;base64,${carLogInDetails.files[0].content}`}
+                        alt={`입차 이미지 1`}
+                      />
+                    </div>
+
+                  </div>
+                  <div>
+                    <img
+                      src={`data:image/jpg;base64,${carLogInDetails.files[1].content}`}
+                      alt={`입차 이미지 2`}
+                    />
+                  </div>
+                </>
+                // carLogInDetails.files.map((file, index) => (
+                //   // <span className="w-1/2 md:w-1/3" key={index}>
+                //   <span className="" key={index}>
+                //     <img src={`data:image/jpg;base64,${file.content}`} alt={`입차 이미지 ${index}`} />
+                //   </span>
+                // ))
+              ) : null}
+            </div>
+          </div>
+          <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="text-lg font-semibold mb-2">출차 이미지</div>
+            <div className="flex flex-wrap gap-4">
+              {loading ? (
+                null
+              ) : carLogOutDetails && carLogOutDetails.files ? (
+                <>
+                  {/* <div className='flex w-full justify-between items-center'> */}
+                  <div className={`w-full justify-between items-center ${carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'flex'}`}>
+                    <div className='text-left'>
+                      <div className='text-indigo-500 font-semibold text-lg'>
+                        {carLogOutDetails.type === 'MEMBER' ? '세대' :
+                          carLogOutDetails.type === 'VISIT' ? '방문' :
+                            carLogOutDetails.type === 'UNKNOWN' ? '미인식' :
+                              carLogOutDetails.type === 'UNREGISTER' ? '미등록' : ''}
+                      </div>
+                      <div>
+                        {carLogOutDetails.inOutTime}
+                      </div>
+                    </div>
+                    <div>
+                      <img
+                        src={`data:image/jpg;base64,${carLogOutDetails.files[0].content}`}
+                        alt={`출차 이미지 1`}
+                      />
+                    </div>
+
+                  </div>
+                  <div>
+                    <img
+                      src={`data:image/jpg;base64,${carLogOutDetails.files[1].content}`}
+                      alt={`출차 이미지 2`}
+                    />
+                  </div>
+                </>
+                // carLogOutDetails.files.map((file, index) => (
+                //   <span className="" key={index}>
+                //     <img src={`data:image/jpg;base64,${file.content}`} alt={`출차 이미지 ${index}`} />
+                //   </span>
+                // ))
+              ) : (
+                null
+              )}
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+    </div >
   );
 };
 
