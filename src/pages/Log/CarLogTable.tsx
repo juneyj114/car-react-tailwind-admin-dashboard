@@ -457,13 +457,17 @@ const CarLogTable = ({
                       if (row.original['out']) {
                         getCarLogOutDetails(row.original['out'].id); // 출차 정보가 있는 경우 해당 정보의 ID를 전달하여 함수 실행
                       }
+                      getCarLogInDetails(null);
                       setCarLogOutDetails(null);
                     }}
                     className={selectedRowIndex === key ? 'bg-violet-50' : ''}
                   >
                     {row.cells.map((cell, key) => {
                       return (
-                        <td {...cell.getCellProps()} key={key}>
+                        <td
+                          {...cell.getCellProps()} key={key}
+                          className='cursor-pointer'
+                        >
                           {cell.render('Cell')}
                         </td>
                       );
@@ -563,13 +567,13 @@ const CarLogTable = ({
       </div>
       <div className={`basis-1/4 h-full ${carLogInDetails && carLogInDetails.type && carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'relative'}`}>
         <div className={`flex flex-col gap-5 md:gap-7 2xl:gap-3 ${carLogInDetails && carLogInDetails.type && carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'fixed'}`}>
-              {loading ? (
-                null
-              ) : carLogInDetails && carLogInDetails.files ? (
-                <>
-          <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-            <div className="text-lg font-semibold mb-2">입차 이미지</div>
-            <div className="flex flex-wrap gap-4">
+          {loading ? (
+            null
+          ) : carLogInDetails && carLogInDetails.files ? (
+            <>
+              <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div className="text-lg font-semibold mb-2">입차 이미지</div>
+                <div className="flex flex-wrap gap-4">
                   {/* <div className='flex w-full justify-between items-center'> */}
                   <div className={`w-full justify-between items-center ${carLogInDetails && carLogInDetails.type === 'UNKNOWN' ? '' : 'flex'}`}>
                     <div className='text-left'>
@@ -597,23 +601,23 @@ const CarLogTable = ({
                       alt={`입차 이미지 2`}
                     />
                   </div>
-                  </div>
                 </div>
-                </>
-                // carLogInDetails.files.map((file, index) => (
-                //   // <span className="w-1/2 md:w-1/3" key={index}>
-                //   <span className="" key={index}>
-                //     <img src={`data:image/jpg;base64,${file.content}`} alt={`입차 이미지 ${index}`} />
-                //   </span>
-                // ))
-              ) : null}
-              {loading ? (
-                null
-              ) : carLogOutDetails && carLogOutDetails.files ? (
-                <>
-          <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-            <div className="text-lg font-semibold mb-2">출차 이미지</div>
-            <div className="flex flex-wrap gap-4">
+              </div>
+            </>
+            // carLogInDetails.files.map((file, index) => (
+            //   // <span className="w-1/2 md:w-1/3" key={index}>
+            //   <span className="" key={index}>
+            //     <img src={`data:image/jpg;base64,${file.content}`} alt={`입차 이미지 ${index}`} />
+            //   </span>
+            // ))
+          ) : null}
+          {loading ? (
+            null
+          ) : carLogOutDetails && carLogOutDetails.files ? (
+            <>
+              <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+                <div className="text-lg font-semibold mb-2">출차 이미지</div>
+                <div className="flex flex-wrap gap-4">
                   {/* <div className='flex w-full justify-between items-center'> */}
                   <div className={`w-full justify-between items-center ${carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'flex'}`}>
                     <div className='text-left'>
@@ -641,17 +645,17 @@ const CarLogTable = ({
                       alt={`출차 이미지 2`}
                     />
                   </div>
-                  </div>
                 </div>
-                </>
-                // carLogOutDetails.files.map((file, index) => (
-                //   <span className="" key={index}>
-                //     <img src={`data:image/jpg;base64,${file.content}`} alt={`출차 이미지 ${index}`} />
-                //   </span>
-                // ))
-              ) : (
-                null
-              )}
+              </div>
+            </>
+            // carLogOutDetails.files.map((file, index) => (
+            //   <span className="" key={index}>
+            //     <img src={`data:image/jpg;base64,${file.content}`} alt={`출차 이미지 ${index}`} />
+            //   </span>
+            // ))
+          ) : (
+            null
+          )}
         </div>
       </div>
     </div >

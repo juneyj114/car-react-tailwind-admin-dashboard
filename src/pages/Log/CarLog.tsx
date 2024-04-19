@@ -107,7 +107,6 @@ const CarLog: React.FC = () => {
         content: repsonseCarLog
       }));
 
-
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
@@ -129,7 +128,7 @@ const CarLog: React.FC = () => {
     // console.log(params);
 
     try {
-      // setLoading(true);
+      setLoading(true);
       const response = await axios.get(carLogUrl, {
         headers: {
           Authorization: cookies.accessToken
@@ -185,7 +184,7 @@ const CarLog: React.FC = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     } finally {
-      // setLoading(false);
+      setLoading(false);
     }
   };
 

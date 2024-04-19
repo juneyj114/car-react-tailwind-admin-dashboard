@@ -25,6 +25,7 @@ export interface CarLogInOut {
 
 export interface ICarLog {
   in: CarLogInOut;
+  originVehicleNumber: string;
   out: CarLogInOut;
   type: CarLogType;
   typeText?: string;
