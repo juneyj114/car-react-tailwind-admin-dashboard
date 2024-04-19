@@ -347,7 +347,7 @@ const CarLogTable = ({
                 </div>
               </div>
               <div className='flex items-center justify-center py-2.5'>
-                <div className='flex gap-4 w-full items-center justify-center'>
+                <div className='flex gap-4 w-full items-center justify-start'>
                   {/* <div className='my-auto font-semibold text-sm text-blue-800'>
                     차량현황
                   </div> */}
