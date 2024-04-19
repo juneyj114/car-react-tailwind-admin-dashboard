@@ -155,20 +155,24 @@ const CarLogTable = ({
       [
         { v: '차량구분', t: 's', s: { alignment: { horizontal: 'center' } } },
         { v: '차량번호', t: 's', s: { alignment: { horizontal: 'center' } } },
+        { v: '동', t: 's', s: { alignment: { horizontal: 'center' } } },
+        { v: '호수', t: 's', s: { alignment: { horizontal: 'center' } } },
         { v: '입차일시', t: 's', s: { alignment: { horizontal: 'center' } } },
         { v: '출차일시', t: 's', s: { alignment: { horizontal: 'center' } } }
       ]
     ];
     data.forEach((e) => {
       rows.push([
-        e.typeText, e.in.vehicleNumber, e.in.inOutTime, e.out ? e.out.inOutTime : ''
+        e.typeText, e.originVehicleNumber ? e.originVehicleNumber : e.in.vehicleNumber, e.dong, e.ho, e.in.inOutTime, e.out ? e.out.inOutTime : ''
       ]);
     });
     // console.log(rows);
     const ws = XLSX.utils.aoa_to_sheet(rows);
     ws['!cols'] = [
-      {},
-      {},
+      { wpx: 150 },
+      { wpx: 150 },
+      { wpx: 150 },
+      { wpx: 150 },
       { wpx: 150 },
       { wpx: 150 },
     ];
