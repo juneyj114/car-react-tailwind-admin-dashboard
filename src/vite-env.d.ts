@@ -21,6 +21,7 @@ interface ImportMetaEnv {
     readonly VITE_NOTICE_ENDPOINT: string;
     readonly VITE_SIGNIN_ENDPOINT: string;
     readonly VITE_LOGIN_ENDPOINT: string;
+    readonly VITE_MONITORING_ENDPOINT: string;
   }
   
   interface ImportMeta {
