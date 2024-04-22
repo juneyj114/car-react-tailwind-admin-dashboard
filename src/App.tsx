@@ -23,6 +23,7 @@ import Notice from './pages/Notice/Notice.tsx';
 import Profile from './pages/Profile/Profile.tsx';
 import { useCookies } from 'react-cookie';
 import Support from './pages/Support/Support.tsx';
+import Monitoring from './pages/Monitoring/Monitoring.tsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -216,6 +217,16 @@ function App() {
             <>
               <PageTitle title="공지사항 | Admin - Car Admin Notice" />
               <Notice />
+            </>
+          }
+        />
+
+        <Route
+          path="/monitoring"
+          element={
+            <>
+              <PageTitle title="모니터링 | Admin - Car Admin Monitoring" />
+              <Monitoring />
             </>
           }
         />
