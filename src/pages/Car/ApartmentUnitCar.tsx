@@ -4,12 +4,10 @@ import Breadcrumb from '../../components/Breadcrumbs/Breadcrumb.tsx';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
 import Loader from '../../common/Loader/index.tsx';
-import LeftArrow from '../../components/Arrow/LeftArrow.tsx';
-import RightArrow from '../../components/Arrow/RightArrow.tsx';
 import { Pageable } from '../../types/pageable.ts';
-import AddButton from '../../components/Button/Add.tsx';
 import AddUnitCarModal from './AddUnitCarModal.tsx';
 import UnregonizedCarModal from './UnrecognizedCarModal.tsx';
+import Refresh from '../../images/icon/refresh.png';
 
 interface CarUnit {
   totalCount: number;
@@ -56,10 +54,13 @@ const ApartmentUnitCar: React.FC = () => {
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
   const [isVehicleSelected, setIsVehicleSelected] = useState(false); // 차량번호가 선택되어 있는지 여부
   const [additionalVehicleNumbers, setAdditionalVehicleNumbers] = useState<string[]>([]);
+  const [searchOption, setSearchOption] = useState({key: 'number', value: ''});
+  const [searchData, setSearchData] = useState<any>();
 
   const carUnitUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_ENDPOINT;
   const carUnitDongUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_DONG_ENDPOINT;
   const delUnitCarUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_REGISTER_DELETE_ENDPOINT;
+  const searchUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_APARTMENT_UNIT_VEHICLE_SEARCH_ENDPOINT;
 
   const getCarUnit = async () => {
     try {
@@ -171,6 +172,65 @@ const ApartmentUnitCar: React.FC = () => {
     getCarUnit();
   }, []);
 
+const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
+  const handleSearch = async () => {
+ 
+    try {
+      setDongLoading(true);
+      const response = await axios.get(searchUrl, {
+        headers: {
+          Authorization: cookies.accessToken
+        },
+        params: {
+          number: searchOption.value
+        }
+      });
+      setSearchData(response.data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  const searchInit = () => {
+    setSearchOption({key: 'number', value: ''});
+    setSearchData(null);
+    setCarUnitDongData(null);
+    getCarUnit();
+  };
+
+  const fillColorNumber = (vehicleNumber: string) => {
+    const highlightNumber = searchOption.value;
+    if (vehicleNumber.includes(highlightNumber)) {
+      const parts = vehicleNumber.split(highlightNumber);
+      const result = [];
+      for (let i = 0; i < parts.length; i++) {
+        // 검색단어가 아닌 부분은 그대로 추가
+        result.push(parts[i]);
+        if (i < parts.length - 1) {
+            result.push(<span key={i} className='bg-yellow-400'>{highlightNumber}</span>);
+        }
+      }
+      return result;
+    } else {
+      return vehicleNumber;  
+    }
+  };
+
+  const isIncludesDong = (dong): boolean => {
+    return searchData.some(search => search.dong === dong);
+  };
+
+  const countVehicleWithSameDongInSearchData = (dong): number => {
+    return searchData.reduce((count, search) => {
+        return search.dong === dong ? count + 1 : count;
+    }, 0);
+  }
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="세대별 차량 목록" rootPage="차량" />
@@ -190,11 +250,13 @@ const ApartmentUnitCar: React.FC = () => {
                     <li key={index} >
                       <div
                         onClick={() => {dongClickHandle(dong.dong)}}
-                        className="relative flex items-center gap-2.5 py-2.5 px-5 font-medium duration-300 ease-linear cursor-pointer before:absolute before:left-0 before:h-0 before:w-1 before:bg-primary before:duration-300 before:ease-linear hover:bg-primary/5 hover:text-primary hover:before:h-full"
+                        className={`relative flex items-center gap-2.5 py-2.5 px-5 font-medium duration-300 ease-linear cursor-pointer before:absolute before:left-0 before:h-0 before:w-1 before:bg-primary before:duration-300 before:ease-linear hover:bg-primary/5 hover:text-primary hover:before:h-full
+                            ${searchData ? isIncludesDong(dong.dong) ? '' : 'hidden' : ''}
+                          `}
                       >
                         <div className='flex justify-between w-full gap-1.5'>
                           <div>{dong.dong}동</div>
-                          <div className='text-sm'>{`${dong.count}대`}</div>
+                          <div className='text-sm'>{`${searchData ? countVehicleWithSameDongInSearchData(dong.dong) : dong.count}대`}</div>
                         </div>
                       </div>
                     </li>
@@ -205,12 +267,49 @@ const ApartmentUnitCar: React.FC = () => {
             </div>
             <div className='p-5 absolute bottom-0 flex justify-between w-full'>
               <div>전체 차량 대수</div>
-              <div className='text-sm'>{`${carUnitData.totalCount}대`}</div>
+              <div className='text-sm'>{`${searchData ? searchData.length : carUnitData.totalCount}대`}</div>
             </div>
           </div>
           <div className="lg:w-4/5 flex h-full flex-col border-l border-stroke dark:border-strokedark">
             {/* <!-- ====== Inbox List Start --> */}
-            <div className="h-full">
+            <div className="h-full relative">
+
+              <div className='absolute right-5 top-3 flex gap-2 items-center'>
+                <img src={Refresh} className='h-fit cursor-pointer' onClick={() => {searchInit();}} />
+                <div className="items-center w-60 flex rounded-md border border-stroke px-5 py-2.5 outline-none focus:border-primary dark:border-strokedark dark:bg-meta-4 dark:focus:border-primary">
+                  <input
+                    type="text"
+                    value={searchOption.value}
+                    onChange={(e) => setSearchOption({...searchOption, value: e.target.value})}
+                    className="w-full focus:outline-none"
+                    placeholder="Search..."
+                    onKeyDown={handleKeyPress}
+                  />
+                  <svg
+                    className="fill-[#637381] hover:fill-primary cursor-pointer"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 18 18"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={handleSearch}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M8.25 3C5.3505 3 3 5.3505 3 8.25C3 11.1495 5.3505 13.5 8.25 13.5C11.1495 13.5 13.5 11.1495 13.5 8.25C13.5 5.3505 11.1495 3 8.25 3ZM1.5 8.25C1.5 4.52208 4.52208 1.5 8.25 1.5C11.9779 1.5 15 4.52208 15 8.25C15 11.9779 11.9779 15 8.25 15C4.52208 15 1.5 11.9779 1.5 8.25Z"
+                      fill=""
+                    />
+                    <path
+                      fillRule="evenodd"
+                      clipRule="evenodd"
+                      d="M11.9572 11.9572C12.2501 11.6643 12.7249 11.6643 13.0178 11.9572L16.2803 15.2197C16.5732 15.5126 16.5732 15.9874 16.2803 16.2803C15.9874 16.5732 15.5126 16.5732 15.2197 16.2803L11.9572 13.0178C11.6643 12.7249 11.6643 12.2501 11.9572 11.9572Z"
+                      fill=""
+                    />
+                  </svg>
+                </div>
+              </div>
+
               <table className="h-full w-full table-auto">
                 <thead>
                   <tr className="flex border-y border-stroke dark:border-strokedark">
@@ -223,7 +322,7 @@ const ApartmentUnitCar: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="block h-full max-h-full overflow-auto py-4">
-                  {dongLoading ? null : carUnitDongData.content.map((vehicles, index) => {
+                  {!carUnitDongData || dongLoading ? null : carUnitDongData.content.map((vehicles, index) => {
                     return (
                       <tr className="flex cursor-pointer items-center hover:bg-whiten dark:hover:bg-boxdark-2" key={index}>
                         <td className="w-[15%] py-4 pl-4 pr-4 lg:pl-10">
@@ -242,7 +341,7 @@ const ApartmentUnitCar: React.FC = () => {
                                 onClick={() => {selectVehicleHandle(s)}}
                                 key={index}
                               >
-                                {s.vehicleNumber}
+                                {searchData ? fillColorNumber(s.vehicleNumber) : s.vehicleNumber}
                               </button>);
                             }) : null}
                             {isVehicleSelected ?

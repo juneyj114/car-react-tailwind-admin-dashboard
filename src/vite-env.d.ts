@@ -4,6 +4,7 @@ interface ImportMetaEnv {
     readonly VITE_DASHBOARD_ENDPOINT: string;
     readonly VITE_APARTMENT_ENDPOINT: string;
     readonly VITE_APARTMENT_UNIT_ENDPOINT: string;
+    readonly VITE_APARTMENT_UNIT_VEHICLE_SEARCH_ENDPOINT: string;
     readonly VITE_UNIT_REGISTER_ENDPOINT: string;
     readonly VITE_UNIT_REGISTER_APPLY_ENDPOINT: string;
     readonly VITE_UNIT_REGISTER_DENY_ENDPOINT: string;
@@ -22,6 +23,7 @@ interface ImportMetaEnv {
     readonly VITE_SIGNIN_ENDPOINT: string;
     readonly VITE_LOGIN_ENDPOINT: string;
     readonly VITE_MONITORING_ENDPOINT: string;
+   
   }
   
   interface ImportMeta {
