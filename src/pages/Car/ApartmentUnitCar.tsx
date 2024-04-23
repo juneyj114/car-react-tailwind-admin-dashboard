@@ -58,8 +58,8 @@ const ApartmentUnitCar: React.FC = () => {
   const [currentDong, setCurrentDong] = useState();
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
   const [isVehicleSelected, setIsVehicleSelected] = useState(false); // 차량번호가 선택되어 있는지 여부
-  const [vehicleId, setVehicleId] = useState<number | undefined>(undefined);
-  const [vehicleNumber, setVehicleNumber] = useState<string | undefined>(undefined);
+  // const [vehicleId, setVehicleId] = useState<number | undefined>(undefined);
+  // const [vehicleNumber, setVehicleNumber] = useState<string | undefined>(undefined);
   const [additionalVehicleNumbers, setAdditionalVehicleNumbers] = useState<Addition[]>([]); // 매핑 차량 리스트
   // const [additionalVehicleNumbers, setAdditionalVehicleNumbers] = useState<string[]>([]);
   const [searchOption, setSearchOption] = useState({key: 'number', value: ''});
@@ -157,29 +157,6 @@ const ApartmentUnitCar: React.FC = () => {
     }
   };
 
-  const addUnrecognizedCarHandler = async (vehicleNumber) => {
-    // console.log(unitId);
-    const AddUnrecognizedCar: AddUnrecognizedCar = {
-      vehicleId,
-      vehicleNumber,
-    };
-
-    // console.log(addUnitCar);
-
-    try {
-      const response = await axios.post(carUnitDongUrl, AddUnrecognizedCar, {
-        headers: {
-          Authorization: cookies.accessToken
-        }
-      });
-      // console.log(response);
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    } finally {
-      // getCarUnitDongData(currentDong);
-    }
-  };
-
   const dongClickHandle = (dong) => {
     setCurrentDong(dong);
     getCarUnitDongData(dong);
@@ -190,14 +167,14 @@ const ApartmentUnitCar: React.FC = () => {
       setSelectedVehicle(null);
       setIsVehicleSelected(false);
       setAdditionalVehicleNumbers(null);
-      setVehicleId(null);
-      setVehicleNumber(null);
+      // setVehicleId(null);
+      // setVehicleNumber(null);
     } else {
       setSelectedVehicle(vehicle);
       setIsVehicleSelected(true);
       setAdditionalVehicleNumbers(vehicle.addition ? vehicle.addition.map(addition => addition) : []);
-      setVehicleId(vehicle.id);
-      setVehicleNumber(vehicle.vehicleNumber);
+      // setVehicleId(vehicle.id);
+      // setVehicleNumber(vehicle.vehicleNumber);
     }
   };
 
