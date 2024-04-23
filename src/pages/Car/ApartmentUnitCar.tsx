@@ -9,6 +9,7 @@ import RightArrow from '../../components/Arrow/RightArrow.tsx';
 import { Pageable } from '../../types/pageable.ts';
 import AddButton from '../../components/Button/Add.tsx';
 import AddUnitCarModal from './AddUnitCarModal.tsx';
+import UnregonizedCarModal from './UnrecognizedCarModal.tsx';
 
 interface CarUnit {
   totalCount: number;
@@ -30,12 +31,18 @@ interface CarUnitDong {
 interface Vehicle {
   id: number;
   vehicleNumber: string;
+  addition: string[];
 }
 
 interface AddUnitCar {
   unitId: number;
   vehicleNumber: string;
   phone: string;
+}
+
+interface AddUnrecognizedCar {
+  vehicleId: number;
+  vehicleNumber: string;
 }
 
 const ApartmentUnitCar: React.FC = () => {
@@ -47,6 +54,8 @@ const ApartmentUnitCar: React.FC = () => {
   const [carUnitDongData, setCarUnitDongData] = useState<Pageable<CarUnitDong[]>>();
   const [currentDong, setCurrentDong] = useState();
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
+  const [isVehicleSelected, setIsVehicleSelected] = useState(false); // 차량번호가 선택되어 있는지 여부
+  const [additionalVehicleNumbers, setAdditionalVehicleNumbers] = useState<string[]>([]);
 
   const carUnitUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_ENDPOINT;
   const carUnitDongUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_DONG_ENDPOINT;
@@ -149,8 +158,12 @@ const ApartmentUnitCar: React.FC = () => {
   const selectVehicleHandle = (vehicle: Vehicle) => {
     if (selectedVehicle && vehicle.id === selectedVehicle.id) {
       setSelectedVehicle(null);
+      setIsVehicleSelected(false);
     } else {
       setSelectedVehicle(vehicle);
+      setIsVehicleSelected(true);
+      const additionalVehicleNumbers = vehicle.addition ? vehicle.addition.map(addition => addition) : [];
+      setAdditionalVehicleNumbers(additionalVehicleNumbers);
     }
   };
 
@@ -232,7 +245,18 @@ const ApartmentUnitCar: React.FC = () => {
                                 {s.vehicleNumber}
                               </button>);
                             }) : null}
-                            <AddUnitCarModal dong={currentDong} ho={vehicles.ho} addHandler={(vehicleNumber, phone) => {addUnitCarHandler(vehicles.unitId, vehicleNumber, phone)}}/>
+                            {isVehicleSelected ?
+                                <UnregonizedCarModal
+                                  // vehicleNumbers={vehicles.vehicleNumber}
+                                  additionalVehicleNumbers={additionalVehicleNumbers}
+                                />
+                                : <AddUnitCarModal
+                                  dong={currentDong}
+                                  ho={vehicles.ho}
+                                  addHandler={(vehicleNumber, phone) => { addUnitCarHandler(vehicles.unitId, vehicleNumber, phone) }}
+                                />
+                              }
+                            {/* <AddUnitCarModal dong={currentDong} ho={vehicles.ho} addHandler={(vehicleNumber, phone) => {addUnitCarHandler(vehicles.unitId, vehicleNumber, phone)}}/> */}
                           </div>
                           <div className='mr-10'>
                             <button
