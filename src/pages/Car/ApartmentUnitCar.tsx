@@ -199,7 +199,7 @@ const handleKeyPress = (e) => {
         params: {
           number: searchOption.value
         }
-      });
+      });      
       setSearchData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
