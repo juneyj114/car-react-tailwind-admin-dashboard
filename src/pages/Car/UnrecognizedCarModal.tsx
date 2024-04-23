@@ -1,55 +1,82 @@
 import { useEffect, useRef, useState } from "react";
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
+import Loader from '../../common/Loader/index.tsx';
 
 interface UnrecognizedCarProps {
-    // vehicleNumbers: Vehicle[]; // Define the prop for vehicle numbers
-    additionalVehicleNumbers: string[];
+    vehicleId: number;
+    vehicleNumber: string;
+    additionalVehicleNumbers: Addition[];
 }
 
-// interface AddUnrecognizedCar {
-//     vehicleId: number;
-//     vehicleNumber: string;
-// }
+interface Addition {
+    id: number;
+    number: string;
+}
 
+interface AddUnrecognizedCar {
+    vehicleId: number;
+    vehicleNumber: string;
+}
 
-// const UnrecognizedCarModal: React.FC<DropdownCarUnitDetailProps> = ({ vehicleNumbers, /*additionalVehicleNumbers*/ }) => {
-const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ additionalVehicleNumbers }) => {
+const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ vehicleId, vehicleNumber, additionalVehicleNumbers }) => {
     const [modalOpen, setModalOpen] = useState(false);
-    const [vehicleNumber, setVehicleNumber] = useState<string>('');
+    const [unrecognizedVehicleNumber, setUnrecognizedVehicleNumber] = useState<string>('');
     const [cookies] = useCookies(['accessToken', 'refreshToken']);
+    const [loading, setLoading] = useState(false);
+    const [additionalVehicles, setAdditionalVehicles] = useState<Addition[]>(additionalVehicleNumbers || []);
 
     const trigger = useRef<any>(null);
     const modal = useRef<any>(null);
 
-    const carUnrecognizedCarUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_UNRECOGNIZED_CAR_ENDPOINT;
-
-    // console.log(vehicleNumbers, "리스트");sssssssss
-    console.log(additionalVehicleNumbers, "리스트2");
+    const unrecognizedCarAddUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_UNRECOGNIZED_CAR_ADD_ENDPOINT;
+    const unrecognizedCarDelUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_DONG_ENDPOINT;
 
     const addUnrecognizedCarHandler = async () => {
-        // console.log(unitId);
-        // const AddUnrecognizedCar: AddUnrecognizedCar = {
-        //     vehicleId,
-        //     vehicleNumber
-        // };
+        setLoading(true);
+        const AddUnrecognizedCar: AddUnrecognizedCar = {
+            vehicleId,
+            vehicleNumber: unrecognizedVehicleNumber,
+        };
 
-        // // console.log(addUnitCar);
-
-        // try {
-        //     const response = await axios.post(carUnrecognizedCarUrl, AddUnrecognizedCar, {
-        //         headers: {
-        //             Authorization: cookies.accessToken
-        //         }
-        //     });
-        //     console.log(response);
-        // } catch (error) {
-        //     console.error('Error fetching data:', error);
-        // } finally {
-        //     // getCarUnitDongData(currentDong);
-        // }
+        try {
+            const response = await axios.post(unrecognizedCarAddUrl, AddUnrecognizedCar, {
+                headers: {
+                    Authorization: cookies.accessToken
+                }
+            });
+            if (response.status === 200) {
+                setAdditionalVehicles(prevState => [...prevState, { id: response.data.id, number: unrecognizedVehicleNumber }]);
+                alert('미인식 차량이 성공적으로 등록되었습니다.');
+                setUnrecognizedVehicleNumber('');
+            }
+        } catch (error) {
+            alert('Error fetching data:' + error);
+        } finally {
+            setLoading(false);
+        }
     };
-    // 
+
+    const delUnrecognizedCarHandler = async (id) => {
+        if (confirm(`${vehicleNumber}차량을 삭제하시겠습니까?`)) {
+            setLoading(true);
+            const deleteUrl = unrecognizedCarDelUrl + `/${id}`;
+            try {
+                const response = await axios.delete(deleteUrl, {
+                    headers: {
+                        Authorization: cookies.accessToken
+                    }
+                });
+                setAdditionalVehicles(prevState => prevState.filter(vehicle => vehicle.id !== id));
+                alert(response.data);
+            } catch (error) {
+                alert('Error deleting unrecognized car: ' + error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        // setAdditionalVehicles(prevState => [...prevState, { id: , number:  }]);
+    };
 
     // close on click outside
     useEffect(() => {
@@ -69,14 +96,11 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ additionalVehicl
 
     const addUnrecognizedCar = () => {
         if (checkValid()) {
-            // if (confirm(`${dong}동 ${ho}호에 ${vehicleNumber}을 등록하시겠습니까?`)) {
-            //     addHandler(vehicleNumber, phone);
-            // }
+            addUnrecognizedCarHandler();
         }
     };
 
     const checkValid = () => {
-        // console.log(vehicleNumber);
         if (!vehicleNumber) {
             alert('차량번호를 입력해주세요.');
             return false;
@@ -86,7 +110,7 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ additionalVehicl
     };
 
     const closeModal = () => {
-        setVehicleNumber('');
+        setUnrecognizedVehicleNumber('');
         // setPhone('');
         setModalOpen(false);
     };
@@ -110,7 +134,9 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ additionalVehicl
                     onFocus={() => setModalOpen(true)}
                     className="md:px-17.5 w-full max-w-142.5 rounded-lg bg-white px-8 py-12 text-center dark:bg-boxdark md:py-15"
                 >
+
                     <div className="pb-2 text-xl font-bold text-black dark:text-white sm:text-2xl">
+                        <div className='text-lg mb-1 text-[#818181]'>{vehicleNumber}</div>
                         미인식 번호 관리
                     </div>
                     <span className="mx-auto mb-6 inline-block h-1 w-22.5 rounded bg-primary"></span>
@@ -123,55 +149,59 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ additionalVehicl
                                 <input
                                     type="text"
                                     placeholder=""
-                                    value={vehicleNumber}
-                                    onChange={(e) => { setVehicleNumber(e.target.value.replace(/(\s*)/g, "")) }}
+                                    value={unrecognizedVehicleNumber}
+                                    onChange={(e) => { setUnrecognizedVehicleNumber(e.target.value.replace(/(\s*)/g, "")) }}
                                     className="col-span-7 w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
                                 />
                                 <button
                                     type="button"
-                                    onClick={addUnrecognizedCarHandler}
+                                    onClick={addUnrecognizedCar}
                                     className="col-span-3 inline-flex items-center justify-center rounded-md bg-primary px-9 text-center font-medium text-white hover:bg-opacity-90 lg:px flex-row">
                                     등록
                                 </button>
                             </div>
                         </div>
                         <div className="mb-5">
-                            <table className="text-center datatable-table w-full table-auto border-collapse overflow-hidden break-words px-4 /*md:table-fixed*/ md:overflow-auto md:px-8">
-                                <thead className='bg-indigo-50 cursor-default'>
-                                    <tr>
-                                        <th>
-                                            <div className="flex items-center justify-center">등록된 미인식 차량번호</div>
-                                        </th>
-                                        <th>
-                                            <div className="flex items-center justify-center">삭제</div>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="cursor-default">
-                                    {additionalVehicleNumbers ? additionalVehicleNumbers.map((vehicleNumber, index) => {
-                                        return (
-                                            <tr className="border-b border-zinc-200" key={index}>
-                                                <td>{vehicleNumber}</td>
-                                                <td>
-                                                    <div className="flex justify-center items-center">
-                                                        <svg
-                                                            clipRule="evenodd"
-                                                            fillRule="evenodd"
-                                                            strokeLinejoin="round"
-                                                            strokeMiterlimit="2"
-                                                            viewBox="0 0 24 24"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            style={{ width: '20px', height: '20px' }}
-                                                            fill="rgb(148 163 184)"
-                                                        >
-                                                            <path d="m4.015 5.494h-.253c-.413 0-.747-.335-.747-.747s.334-.747.747-.747h5.253v-1c0-.535.474-1 1-1h4c.526 0 1 .465 1 1v1h5.254c.412 0 .746.335.746.747s-.334.747-.746.747h-.254v15.435c0 .591-.448 1.071-1 1.071-2.873 0-11.127 0-14 0-.552 0-1-.48-1-1.071zm14.5 0h-13v15.006h13zm-4.25 2.506c-.414 0-.75.336-.75.75v8.5c0 .414.336.75.75.75s.75-.336.75-.75v-8.5c0-.414-.336-.75-.75-.75zm-4.5 0c-.414 0-.75.336-.75.75v8.5c0 .414.336.75.75.75s.75-.336.75-.75v-8.5c0-.414-.336-.75-.75-.75zm3.75-4v-.5h-3v.5z" fillRule="nonzero" />
-                                                        </svg>
-                                                    </div>
-                                                </td>
-                                            </tr>)
-                                    }) : null}
-                                </tbody>
-                            </table>
+                            {loading ? <Loader /> : (
+                                <table className="text-center datatable-table w-full table-auto border-collapse overflow-hidden break-words px-4 /*md:table-fixed*/ md:overflow-auto md:px-8">
+                                    <thead className='bg-indigo-50 cursor-default'>
+                                        <tr>
+                                            <th>
+                                                <div className="flex items-center justify-center">등록된 미인식 차량번호</div>
+                                            </th>
+                                            <th>
+                                                <div className="flex items-center justify-center">삭제</div>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="cursor-default">
+                                        {additionalVehicles ? additionalVehicles.map((vehicle, index) => {
+                                            return (
+                                                <tr className="border-b border-zinc-200" key={index}>
+                                                    <td>{vehicle.number}</td>
+                                                    <td>
+                                                        <div className="flex justify-center items-center" >
+                                                            <svg
+                                                                clipRule="evenodd"
+                                                                fillRule="evenodd"
+                                                                strokeLinejoin="round"
+                                                                strokeMiterlimit="2"
+                                                                viewBox="0 0 24 24"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                style={{ width: '20px', height: '20px' }}
+                                                                fill="rgb(148 163 184)"
+                                                                onClick={(id) => delUnrecognizedCarHandler(vehicle.id)}
+                                                            >
+                                                                <path d="m4.015 5.494h-.253c-.413 0-.747-.335-.747-.747s.334-.747.747-.747h5.253v-1c0-.535.474-1 1-1h4c.526 0 1 .465 1 1v1h5.254c.412 0 .746.335.746.747s-.334.747-.746.747h-.254v15.435c0 .591-.448 1.071-1 1.071-2.873 0-11.127 0-14 0-.552 0-1-.48-1-1.071zm14.5 0h-13v15.006h13zm-4.25 2.506c-.414 0-.75.336-.75.75v8.5c0 .414.336.75.75.75s.75-.336.75-.75v-8.5c0-.414-.336-.75-.75-.75zm-4.5 0c-.414 0-.75.336-.75.75v8.5c0 .414.336.75.75.75s.75-.336.75-.75v-8.5c0-.414-.336-.75-.75-.75zm3.75-4v-.5h-3v.5z" fillRule="nonzero" />
+                                                            </svg>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )
+                                        }) : null}
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     </div>
                     <div className="flex justify-center">
@@ -182,6 +212,7 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ additionalVehicl
                             취소
                         </button>
                     </div>
+
                 </div>
             </div>
         </div>
