@@ -24,6 +24,7 @@ import Profile from './pages/Profile/Profile.tsx';
 import { useCookies } from 'react-cookie';
 import Support from './pages/Support/Support.tsx';
 import Monitoring from './pages/Monitoring/Monitoring.tsx';
+import QnA from './pages/Support/QnA/QnA.tsx';
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -150,7 +151,6 @@ function App() {
           }
         />
 
-
         <Route
           path="/c/log"
           element={
@@ -237,6 +237,16 @@ function App() {
             <>
               <PageTitle title="고객지원 | Support" />
               <Support />
+            </>
+          }
+        />
+
+        <Route
+          path="/support/qna"
+          element={
+            <>
+              <PageTitle title="질의응답 | Support - QnA" />
+              <QnA />
             </>
           }
         />
