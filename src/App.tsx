@@ -38,7 +38,7 @@ function App() {
   }, [pathname]);
 
   useEffect(() => {
-    if (!cookies.accessToken && location.pathname != '/auth/signin' && location.pathname != '/support') {
+    if (!cookies.accessToken && location.pathname != '/auth/signin' && location.pathname != '/support' && location.pathname != '/support/qna') {
       alert('로그인이 만료되었습니다. 로그인창으로 이동합니다.');
       navigate('/');
     }
