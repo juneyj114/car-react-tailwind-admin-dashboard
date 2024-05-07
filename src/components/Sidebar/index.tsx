@@ -70,12 +70,12 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       <div className={sidebarVisible ? `` : 'hidden'}>
         <aside
           ref={sidebar}
-          className={`absolute left-0 top-0 flex w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          className={`absolute left-0 top-0 flex w-72.5 flex-col overflow-y-hidden bg-black duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 h-full ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
             }`}
         >
           <div className="no-scrollbar h-screen flex flex-col overflow-y-auto duration-300 ease-linear">
             {/* <!-- Sidebar Menu --> */}
-            <div className='flex justify-end mt-5 pr-4' onClick={() => setSidebarVisible(!sidebarVisible)}>
+            <div className='flex justify-end mt-5 pr-4 cursor-pointer' onClick={() => setSidebarVisible(!sidebarVisible)}>
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24" fill="rgb(138,153,175)">
                 <path d="M16.67 0l2.83 2.829-9.339 9.175 9.339 9.167-2.83 2.829-12.17-11.996z" />
               </svg>

@@ -133,8 +133,8 @@ const options: ApexOptions = {
   tooltip: {
     x: {
       formatter: function (value, { seriesIndex, dataPointIndex, w }) {
-        const exit = w.globals.series[seriesIndex][dataPointIndex];
-        const entry = w.globals.series[seriesIndex][dataPointIndex];
+        const exit = w.globals.series[0][dataPointIndex];
+        const entry = w.globals.series[1][dataPointIndex];
         const total = exit + entry;
         return `${value}요일(합: ${total})`
       }

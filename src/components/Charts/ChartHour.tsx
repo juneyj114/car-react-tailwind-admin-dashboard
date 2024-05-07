@@ -138,17 +138,12 @@ const options: ApexOptions = {
     x: {
       show: true,
       formatter: (value, { seriesIndex, dataPointIndex, w }) => {
-        const exit = w.globals.series[seriesIndex][dataPointIndex];
-        const entry = w.globals.series[seriesIndex][dataPointIndex];
-        const total = exit + entry;
-        return `${value}시(합 : ${total})`; // Combine legend title and entry value
+        // 첫 번째 시리즈(index 0)가 입차, 두 번째 시리즈(index 1)가 출차라고 가정
+        const entry = w.globals.series[0][dataPointIndex]; // 입차 데이터
+        const exit = w.globals.series[1][dataPointIndex]; // 출차 데이터
+        const total = entry + exit;
+        return `${value}시(합계: ${total})`;
       },
-      // formatter: (value, { seriesIndex, dataPointIndex, w }) => {
-      //   const exit = w.globals.series[1][dataPointIndex]; 
-      //   const entry = w.globals.series[0][dataPointIndex]; 
-      //   const total = parseInt(exit, 10) + parseInt(entry, 10); 
-      //   return `${value}시(합 : ${total})`;
-      // },
     },
   },
 };
@@ -162,6 +157,7 @@ const ChartHour = ({
   const entryData = chartData.map((data) => {
     return data.entry === null ? 0 : data.entry.toString();
   });
+  console.log(entryData, 'dldl')
   const exitData = chartData.map((data) => {
     return data.exit === null ? 0 : data.exit.toString();
   });
@@ -209,9 +205,7 @@ const ChartHour = ({
             </div>
           </div>
         </div>
-        
       </div> */}
-
       <div>
         <div id="chartOne" className="-ml-5">
           <ReactApexChart
