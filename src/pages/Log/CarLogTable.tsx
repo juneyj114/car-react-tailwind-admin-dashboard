@@ -609,12 +609,12 @@ const CarLogTable = ({
             null
           ) : carLogInDetails && carLogInDetails.files ? (
             <>
-              <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+              <div className="border border-stroke rounded-md p-4 bg-white shadow-default dark:border-strokedark dark:bg-boxdark h-fit">
                 <div className="text-lg font-semibold mb-2">입차 이미지</div>
                 <div className="flex flex-wrap gap-4">
                   {/* <div className='flex w-full justify-between items-center'> */}
-                  <div className={`w-full justify-between items-center ${carLogInDetails && carLogInDetails.type === 'UNKNOWN' ? '' : 'flex'}`}>
-                    <div className='text-left'>
+                  <div className='w-full justify-between items-center flex'>
+                    <div className='text-left w-1/2'>
                       <div className='text-indigo-500 font-semibold text-lg'>
                         {carLogInDetails && carLogInDetails.type === 'MEMBER' ? '세대' :
                           carLogInDetails.type === 'VISIT' ? '방문' :
@@ -625,10 +625,11 @@ const CarLogTable = ({
                         {carLogInDetails.inOutTime}
                       </div>
                     </div>
-                    <div>
+                    <div className='w-1/2'>
                       <img
                         src={`data:image/jpg;base64,${carLogInDetails.files[0].content}`}
                         alt={`입차 이미지 1`}
+                        className='w-full h-18'
                       />
                     </div>
 
@@ -657,7 +658,7 @@ const CarLogTable = ({
                 <div className="text-lg font-semibold mb-2">출차 이미지</div>
                 <div className="flex flex-wrap gap-4">
                   {/* <div className='flex w-full justify-between items-center'> */}
-                  <div className={`w-full justify-between items-center ${carLogOutDetails && carLogOutDetails.type === 'UNKNOWN' ? '' : 'flex'}`}>
+                  <div className='w-full justify-between items-center flex'>
                     <div className='text-left'>
                       <div className='text-indigo-500 font-semibold text-lg'>
                         {carLogOutDetails.type === 'MEMBER' ? '세대' :
@@ -669,10 +670,11 @@ const CarLogTable = ({
                         {carLogOutDetails.inOutTime}
                       </div>
                     </div>
-                    <div>
+                    <div className='w-1/2'>
                       <img
                         src={`data:image/jpg;base64,${carLogOutDetails.files[0].content}`}
                         alt={`출차 이미지 1`}
+                        className='w-full h-18'
                       />
                     </div>
 
