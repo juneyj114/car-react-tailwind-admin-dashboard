@@ -40,7 +40,7 @@ const SelectGroup = ({
   }, []);
 
   return (
-    <div className="mb-4.5">
+    <div className="mb-4.5 col-span-2">
       <div className="relative z-20 bg-transparent dark:bg-form-input">
         <select
           value={selectedOption}

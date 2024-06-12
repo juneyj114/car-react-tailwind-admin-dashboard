@@ -305,8 +305,8 @@ const ModalSave: React.FC = () => {
 
               {saveData.map((data, index) => {
                 return data.visable ? (
-                  <div className="mb-5" key={index}>
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  <div className="mb-5 grid grid-cols-3 flex items-center gap-4" key={index}>
+                    <label className="block text-sm font-medium text-black dark:text-white col-span-1">
                       {data.label} {data.optional ? null : (<span className="text-meta-1">*</span>)}
                     </label>
                     {data.valueType === ValueType.Text && (
@@ -315,7 +315,7 @@ const ModalSave: React.FC = () => {
                         placeholder=""
                         value={data.value}
                         onChange={(e) => handleChange(index, e.target.value, e.target.type)}
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                       />
                     )}
                     {data.valueType === ValueType.Content && (
@@ -323,7 +323,7 @@ const ModalSave: React.FC = () => {
                         rows={6}
                         placeholder=""
                         onChange={(e) => handleChange(index, e.target.value, e.target.type)}
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                         defaultValue={data.value}
                       ></textarea>
                     )}
@@ -333,7 +333,7 @@ const ModalSave: React.FC = () => {
                         placeholder="2024-01-01"
                         value={data.value ? data.value : ''}
                         onChange={(e) => handleChange(index, e.target.value, e.target.type)}
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                       />
                     )}
                     {data.valueType === ValueType.SelectGroup && (
@@ -345,7 +345,7 @@ const ModalSave: React.FC = () => {
                         placeholder="2024-01-01"
                         value={data.value ? data.value : ''}
                         onChange={(e) => handleDateChange(index, e.target.value)}
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                       />
                     )}
                     {data.valueType === ValueType.Boolean && (

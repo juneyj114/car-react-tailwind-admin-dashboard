@@ -137,8 +137,8 @@ const ModalEdit: React.FC = () => {
 
               {editableEditData.map((data, index) => {
                 return data.visable ? (
-                  <div className="mb-5" key={index}>
-                    <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                  <div className="mb-5 grid grid-cols-3 flex items-center gap-4" key={index}>
+                    <label className="block text-sm font-medium text-black dark:text-white col-span-1">
                       {data.label}
                     </label>
                     {data.editable ? (
@@ -149,14 +149,14 @@ const ModalEdit: React.FC = () => {
                             placeholder=""
                             value={data.value}
                             onChange={(e) => handleChange(index, e.target.value, e.target.type)}
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                           />
                         )}
                         {data.valueType === ValueType.Content && (
                           <textarea
                             rows={6}
                             placeholder=""
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                             defaultValue={data.value}
                           ></textarea>
                         )}
@@ -166,7 +166,7 @@ const ModalEdit: React.FC = () => {
                             placeholder=""
                             value={data.value ? data.value : 0}
                             onChange={(e) => handleChange(index, e.target.value, e.target.type)}
-                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                            className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                           />
                         )}
                         {data.valueType === ValueType.SelectGroup && (
@@ -198,7 +198,7 @@ const ModalEdit: React.FC = () => {
                         )}
                       </>
                     ) : (
-                      <span className="pl-3">{data.value}</span>
+                      <span className="text-left col-span-2 px-5 py-3">{data.value}</span>
                     )}
                   </div>
                 ) : null

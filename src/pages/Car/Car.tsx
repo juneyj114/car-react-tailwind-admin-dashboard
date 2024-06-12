@@ -221,7 +221,7 @@ const Car: React.FC = () => {
             editData.key = k;
             editData.label = '시작일자';
             editData.value = response.data[k];
-            editData.editable = true;
+            // editData.editable = true;
             editData.visable = true;
             editData.valueType = ValueType.Date;
             break;
@@ -229,7 +229,7 @@ const Car: React.FC = () => {
             editData.key = k;
             editData.label = '종료일자';
             editData.value = response.data[k];
-            editData.editable = true;
+            // editData.editable = true;
             editData.visable = true;
             editData.valueType = ValueType.Date;
             break;
