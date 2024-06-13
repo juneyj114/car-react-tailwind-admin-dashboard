@@ -231,6 +231,9 @@ const ModalSave: React.FC = () => {
             tempSaveData[data.key] = data.value;
           }
         });
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
         formData.append('request', new Blob([JSON.stringify(tempSaveData)], { type: "application/json" }));
         willSaveData = formData;
 
