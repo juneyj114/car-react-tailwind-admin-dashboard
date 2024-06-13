@@ -75,26 +75,26 @@ const ModalDetails: React.FC = () => {
                 // ) : null
                 return data.visable ? 
                   data.key === 'files' ? (
-                    <div className='mb-3' key={index}>
-                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">첨부파일</label>
+                    <div className='mb-5 grid grid-cols-3 flex items-center gap-4' key={index}>
+                      <label className="block text-sm font-medium text-black dark:text-white col-span-1">첨부파일</label>
                       {data.value ? data.value.map((file, index) => {
                         return (
                           <span
-                            className=""
+                            className="w-full col-span-2 px-5 py-3"
                             key={index}
                           >
                             <img src={`data:image/jpg;base64,${file.content}`}></img>
                           </span>
                         );
-                      }) : null}
+                      }) : <span className="text-left col-span-2 px-5 py-3">첨부파일이 없습니다.</span>}
                     </div>
                   ) : (
-                    <div className="mb-5" key={index}>
-                      <label className="mb-3 block text-sm font-medium text-black dark:text-white">
+                    <div className="mb-5 grid grid-cols-3 flex items-center gap-4" key={index}>
+                      <label className="block text-sm font-medium text-black dark:text-white col-span-1">
                         {data.label}
                       </label>
                       <span
-                        className="pl-3"
+                        className="text-left col-span-2 px-5 py-3"
                       >{data.valueText}</span>
                     </div>
                   ) : null

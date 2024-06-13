@@ -150,7 +150,7 @@ const ModalSave: React.FC = () => {
       case '/notice':
         initialData.push({ key: 'title', label: '제목', value: '', valueType: ValueType.Text, visable: true, optional: false });
         initialData.push({ key: 'content', label: '내용', value: '', valueType: ValueType.Content, visable: true, optional: false });
-        initialData.push({ key: 'files', label: '첨부파일', value: null, valueType: ValueType.Files, visable: true, optional: false });
+        initialData.push({ key: 'files', label: '첨부파일', value: null, valueType: ValueType.Files, visable: true, optional: true });
         break;
       default:
         break;
@@ -223,12 +223,11 @@ const ModalSave: React.FC = () => {
         const tempSaveData = {};
         const formData = new FormData();
         saveData.forEach((data) => {
-          if (data.key === 'files') {
-            // console.log(data);
+          if (data.key === 'files' && data.value) {
             Array.from(data.value).forEach((el: any) => {
               formData.append('files', el);
             });
-          } else {
+          } else if (data.key !== 'files') {
             tempSaveData[data.key] = data.value;
           }
         });
