@@ -150,6 +150,8 @@ const ModalSave: React.FC = () => {
       case '/notice':
         initialData.push({ key: 'title', label: '제목', value: '', valueType: ValueType.Text, visable: true, optional: false });
         initialData.push({ key: 'content', label: '내용', value: '', valueType: ValueType.Content, visable: true, optional: false });
+        initialData.push({ key: 'startDate', label: '시작일자', value: '', valueType: ValueType.Date, visable: true, optional: true });
+        initialData.push({ key: 'endDate', label: '종료일자', value: '', valueType: ValueType.Date, visable: true, optional: true });
         initialData.push({ key: 'files', label: '첨부파일', value: null, valueType: ValueType.Files, visable: true, optional: true });
         break;
       default:
@@ -342,13 +344,20 @@ const ModalSave: React.FC = () => {
                       <SelectGroup selectGroupValues={data.selectGroupValues} saveData={saveData} setSaveData={setSaveData} saveKey={data.key} />
                     )}
                     {data.valueType === ValueType.Date && (
-                      <input
-                        type="text"
-                        placeholder="2024-01-01"
-                        value={data.value ? data.value : ''}
-                        onChange={(e) => handleDateChange(index, e.target.value)}
-                        className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
-                      />
+                      <div className="col-span-2">
+                        <input
+                          type="text"
+                          placeholder="2024-01-01"
+                          value={data.value ? data.value : ''}
+                          onChange={(e) => handleDateChange(index, e.target.value)}
+                          className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
+                        />
+                        {data.key === 'endDate' && location.pathname === '/notice' && (
+                          <div className="text-xs font-medium mt-1.5 px-2 text-[#CD5D5D]">
+                            * 미입력시 종료날짜는 무기한입니다.
+                          </div>
+                        )}
+                      </div>
                     )}
                     {data.valueType === ValueType.Boolean && (
                       <div>
@@ -385,6 +394,7 @@ const ModalSave: React.FC = () => {
                         type='file'
                         multiple={true}
                         onChange={(e) => { handleChange(index, e.target.files, e.target.type) }}
+                        className="w-full bg-transparent py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
                       >
                       </input>
                     )}
