@@ -51,7 +51,7 @@ const ApartmentUnitCar: React.FC = () => {
   const [carUnitData, setCarUnitData] = useState<CarUnit>();
   const [carUnitDongData, setCarUnitDongData] = useState<Pageable<CarUnitDong[]>>();
   const [currentDong, setCurrentDong] = useState();
-  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle>();
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
   const [isVehicleSelected, setIsVehicleSelected] = useState(false); // 차량번호가 선택되어 있는지 여부
   // const [vehicleId, setVehicleId] = useState<number | undefined>(undefined);
   // const [vehicleNumber, setVehicleNumber] = useState<string | undefined>(undefined);
@@ -60,6 +60,7 @@ const ApartmentUnitCar: React.FC = () => {
   const [searchOption, setSearchOption] = useState({ key: 'number', value: '' });
   const [searchData, setSearchData] = useState<any>();
   // const [selectedDiv, setSelectedDiv] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const carUnitUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_ENDPOINT;
   const carUnitDongUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_DONG_ENDPOINT;
@@ -180,14 +181,20 @@ const ApartmentUnitCar: React.FC = () => {
   const selectVehicleHandle = (vehicle: Vehicle) => {
     if (selectedVehicle && vehicle.id === selectedVehicle.id) {
       setSelectedVehicle(null);
+      setAdditionalVehicleNumbers([]);
     } else {
       setSelectedVehicle(vehicle);
+      setAdditionalVehicleNumbers(vehicle.addition || []);
     }
   };
 
   useEffect(() => {
-    getCarUnit();
-  }, []);
+    if (selectedVehicle) {
+      setAdditionalVehicleNumbers(selectedVehicle.addition || []);
+    } else {
+      setAdditionalVehicleNumbers([]);
+    }
+  }, [selectedVehicle]);
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -246,6 +253,17 @@ const ApartmentUnitCar: React.FC = () => {
       return search.dong === dong ? count + 1 : count;
     }, 0);
   }
+
+  const openModal = (vehicle) => {
+    setSelectedVehicle(vehicle);
+    setAdditionalVehicleNumbers(vehicle.addition);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedVehicle(null);
+  };
 
   return (
     <DefaultLayout>
@@ -366,14 +384,19 @@ const ApartmentUnitCar: React.FC = () => {
                                     </button> */}
                                     <button
                                       className={`flex items-center w-full rounded-lg border border-[#d5d5d5] text-sm font-medium hover:opacity-80 dark:text-white py-1 px-1`}
-                                      // key={index}
+                                    // key={index}
                                     >
                                       <p className="flex-1"
                                         // onClick={(e) => {
                                         //   e.stopPropagation();
                                         //   selectVehicleHandle(s);
                                         // }}
-                                        >
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          openModal({ id: s.id, vehicleNumber: s.vehicleNumber });
+                                          selectVehicleHandle(s);
+                                        }}
+                                      >
                                         {searchData ? fillColorNumber(s.vehicleNumber) : s.vehicleNumber}
                                       </p>
                                       <svg
@@ -437,6 +460,14 @@ const ApartmentUnitCar: React.FC = () => {
                     })}
                   </tbody>
                 </table>
+                {isModalOpen && selectedVehicle && (
+                  <UnregonizedCarModal
+                    vehicleId={selectedVehicle.id}
+                    vehicleNumber={selectedVehicle.vehicleNumber}
+                    additionalVehicleNumbers={additionalVehicleNumbers || []}
+                    closeModal={closeModal}
+                  />
+                )}
               </div>
               {/* <div
               className="flex items-center justify-between border-t border-stroke p-4 dark:border-strokedark sm:px-6">
