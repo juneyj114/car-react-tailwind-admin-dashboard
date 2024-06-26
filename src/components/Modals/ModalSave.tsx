@@ -216,9 +216,9 @@ const ModalSave: React.FC = () => {
           }
           willSaveData[data.key] = data.value;
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 1000);
         break;
       case '/notice':
         saveUrl = saveUrl + import.meta.env.VITE_NOTICE_ENDPOINT;
