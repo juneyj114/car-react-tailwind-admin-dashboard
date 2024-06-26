@@ -33,7 +33,7 @@ const Notice: React.FC = () => {
   const [, setEditData] = useRecoilState(editDataState);
 
   const noticeUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_NOTICE_ENDPOINT;
-  
+
   const getAllNotice = async () => {
     try {
       setLoading(true);
@@ -46,7 +46,7 @@ const Notice: React.FC = () => {
           size: pageSize,
         },
       });
-      
+
       setNoticeData(response.data.content);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -60,9 +60,9 @@ const Notice: React.FC = () => {
   }, []);
 
   const noticeColumns = [
-    { Header: 'ID', accessor: 'id'},
-    { Header: '제목', accessor: 'title'},
-    { Header: '작성일', accessor: 'createDate'}
+    { Header: 'ID', accessor: 'id' },
+    { Header: '제목', accessor: 'title' },
+    { Header: '작성일', accessor: 'createDate' }
   ];
 
   const detailsHandler = async (id) => {
@@ -74,7 +74,7 @@ const Notice: React.FC = () => {
       });
 
       const noticeDetailsData = [];
-      
+
       Object.keys(response.data).forEach((k) => {
         let detail: DetailsData = {
           key: '',
@@ -115,10 +115,10 @@ const Notice: React.FC = () => {
         }
         noticeDetailsData.push(detail);
       });
-      
+
       setDetailsData(noticeDetailsData);
     } catch (error) {
-      
+
     }
   };
 
@@ -131,7 +131,7 @@ const Notice: React.FC = () => {
       });
 
       const apartmentEditData = [];
-      
+
       Object.keys(response.data).forEach((k) => {
         let editData: EditData = {
           key: '',
@@ -171,23 +171,31 @@ const Notice: React.FC = () => {
       });
       setEditData(apartmentEditData);
     } catch (error) {
-      
+
     }
   };
 
   const deleteHandler = async (id) => {
     const deleteUrl = `${noticeUrl}/${id}`;
-    const response = await axios.delete(deleteUrl , {
-      headers: {
-        Authorization: cookies.accessToken
-      }
-    });
-    // console.log(response);
-    // getAllNotice();
+    try {
+      const response = await axios.delete(deleteUrl, {
+        headers: {
+          Authorization: cookies.accessToken
+        }
+      });
+      // console.log(response);
+      // getAllNotice();
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+    } catch (error) {
+      console.error("Error deleting notice:", error);
+    }
   };
 
   const convertValueToText = (value) => {
-    switch(value) {
+    switch (value) {
       case 'COUNT':
         return '횟수';
       case 'TIME':
@@ -213,7 +221,7 @@ const Notice: React.FC = () => {
           <DataTable tableData={noticeData} column={noticeColumns} hasDetailsMode={true} detailsHandler={detailsHandler} hasEditMode={true} editHandler={editHandler} hasDeleteMode={true} deleteHandler={deleteHandler} />
         )}
       </div>
-      <ModalSave/>
+      <ModalSave />
     </DefaultLayout>
   );
 };
