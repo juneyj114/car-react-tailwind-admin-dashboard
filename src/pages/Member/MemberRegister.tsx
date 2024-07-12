@@ -27,7 +27,7 @@ const MemberRegister: React.FC = () => {
   const [memberData, setMemberData] = useState<MemberRegister[]>();
   const pageSize = useRecoilValue(pageSizeState);
   const pageNumber = useRecoilValue(pageNumberState);
-  
+
   const memberUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_UNIT_REGISTER_ENDPOINT;
 
   const getAllMember = async () => {
@@ -42,7 +42,7 @@ const MemberRegister: React.FC = () => {
           size: pageSize
         }
       });
-      const memberDataWithoutDate: MemberRegister[]  = response.data;
+      const memberDataWithoutDate: MemberRegister[] = response.data;
       const memberDataWithDate = memberDataWithoutDate.map((member) => {
         const registerDate = new Date(member.registerDate);
         // member.registerYMD = registerDate.getFullYear() + '-' + (registerDate.getMonth()+1) + '-' + registerDate.getDate();
@@ -68,10 +68,10 @@ const MemberRegister: React.FC = () => {
 
   const memberRegisterColumns = [
     // { Header: 'ID', accessor: 'id'},
-    { Header: '동', accessor: 'dong'},
-    { Header: '호', accessor: 'ho'},
-    { Header: '계정', accessor: 'userId'},
-    { Header: '신청일시', accessor: 'registerYMD'},
+    { Header: '동', accessor: 'dong' },
+    { Header: '호', accessor: 'ho' },
+    { Header: '계정', accessor: 'userId' },
+    { Header: '신청일시', accessor: 'registerYMD' },
   ];
 
   return (
@@ -80,9 +80,13 @@ const MemberRegister: React.FC = () => {
       <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10">
         {loading ? (
           <Loader />
-        ) : (
-          <MemberRegisterTable tableData={memberData} column={memberRegisterColumns} completeHandler={getAllMember}/>
-        )}
+        ) : memberData && memberData.length > 0 ? (
+          <MemberRegisterTable
+            tableData={memberData}
+            column={memberRegisterColumns}
+            completeHandler={getAllMember}
+          />
+        ) : null}
       </div>
       {/* <ModalSave/> */}
     </DefaultLayout>

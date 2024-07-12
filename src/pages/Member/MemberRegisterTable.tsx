@@ -14,7 +14,7 @@ const MemberRegisterTable = ({
   column,
   tableData,
   completeHandler
- }) => {
+}) => {
 
   const columns = useMemo(() => column, []);
   const data = useMemo(() => tableData, [tableData]);
@@ -35,7 +35,7 @@ const MemberRegisterTable = ({
     getTableProps,
     getTableBodyProps,
     headerGroups,
-    page ,
+    page,
     prepareRow,
     state,
     setGlobalFilter,
@@ -49,7 +49,7 @@ const MemberRegisterTable = ({
   } = tableInstance;
 
   const { globalFilter, pageIndex, pageSize } = state;
-  
+
   const applyUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_UNIT_REGISTER_APPLY_ENDPOINT;
   const denyUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_UNIT_REGISTER_DENY_ENDPOINT;
 
@@ -100,7 +100,6 @@ const MemberRegisterTable = ({
           </select>
         </div>
       </div>
-
       <table
         {...getTableProps()}
         className="datatable-table w-full table-auto border-collapse overflow-hidden break-words px-4 /*md:table-fixed*/ md:overflow-auto md:px-8"
@@ -115,7 +114,7 @@ const MemberRegisterTable = ({
                 >
                   <div className="flex items-center justify-center">
                     <span className='mr-2'> {column.render('Header')}</span>
-                    <SortIcon/>
+                    <SortIcon />
                   </div>
                 </th>
               ))}
@@ -194,9 +193,8 @@ const MemberRegisterTable = ({
               onClick={() => {
                 gotoPage(index);
               }}
-              className={`${
-                pageIndex === index && 'bg-primary text-white'
-              } mx-1 flex cursor-pointer items-center justify-center rounded-md p-1 px-3 hover:bg-primary hover:text-white`}
+              className={`${pageIndex === index && 'bg-primary text-white'
+                } mx-1 flex cursor-pointer items-center justify-center rounded-md p-1 px-3 hover:bg-primary hover:text-white`}
             >
               {index + 1}
             </button>
