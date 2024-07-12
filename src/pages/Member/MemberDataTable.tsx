@@ -192,7 +192,7 @@ const MemberDataTable = ({
                   </div>
                 </th>
               ))}
-                <th className='text-center' colSpan={1} role='columnheader' key={headerGroup.headers.length}>
+                {/* <th className='text-center' colSpan={1} role='columnheader' key={headerGroup.headers.length}>
                   <div className="flex items-center justify-center" >
                     <span>상세</span>
                   </div>
@@ -209,7 +209,7 @@ const MemberDataTable = ({
                   <div className="flex items-center justify-center" >
                     <span>삭제</span>
                   </div>
-                </th>
+                </th> */}
                 
             </tr>
           ))}
@@ -229,7 +229,7 @@ const MemberDataTable = ({
                   );
                 })}
                 
-                <td role='row' key={page.length} onClick={() => detailsHandler(row.original['id'])}>
+                {/* <td role='row' key={page.length} onClick={() => detailsHandler(row.original['id'])}>
                   <ModalDetails/>
                 </td>
                 
@@ -239,7 +239,7 @@ const MemberDataTable = ({
                 
                 <td role='row' key={page.length+2}>
                   <ModalDelete deleteHandler={deleteHandler} deleteData={row.cells} deleteId={row.original['id']}/>
-                </td>
+                </td> */}
                 
               </tr>
             );
