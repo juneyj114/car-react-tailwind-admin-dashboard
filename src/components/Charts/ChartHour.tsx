@@ -157,7 +157,7 @@ const ChartHour = ({
   const entryData = chartData.map((data) => {
     return data.entry === null ? 0 : data.entry.toString();
   });
-  console.log(entryData, 'dldl')
+  // console.log(entryData, 'dldl')
   const exitData = chartData.map((data) => {
     return data.exit === null ? 0 : data.exit.toString();
   });
