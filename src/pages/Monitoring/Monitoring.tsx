@@ -86,6 +86,8 @@ const Monitoring: React.FC = () => {
     }
   };
 
+  console.log(carLogDetails, "ddd");
+
 
   return (
     <DefaultLayout>
@@ -111,7 +113,9 @@ const Monitoring: React.FC = () => {
                   </div>
                 </div>
                 <div>
-                  <img src={`data:image/jpg;base64,${carLogDetails.files[1].content}`} className='w-full h-130'></img>
+                  {carLogDetails.files.length > 1 && (
+                    <img src={`data:image/jpg;base64,${carLogDetails.files[1].content}`} className='w-full h-130' alt="car log detail" />
+                  )}
                 </div>
               </>
             ) : null}
