@@ -86,6 +86,16 @@ const Member: React.FC = () => {
     return String(value).padStart(2, '0');
   };
 
+  const deleteHandler = async (id) => {
+    const deleteUrl = memberUrl + `/${id}`
+    const response = await axios.delete(deleteUrl , {
+      headers: {
+        Authorization: cookies.accessToken
+      }
+    });
+    getAllMember();
+  };
+
   const apartmentColumns = [
     // { Header: 'ID', accessor: 'id'},
 
@@ -108,7 +118,7 @@ const Member: React.FC = () => {
         {loading ? (
           <Loader />
         ) : memberData && memberData.content.length > 0 ? (
-          <MemberDataTable tableData={memberData.content} column={apartmentColumns} onSearch={() => { }} />
+          <MemberDataTable tableData={memberData.content} column={apartmentColumns} deleteHandler={deleteHandler} onSearch={() => { }} />
         ) : null}
       </div>
     </DefaultLayout>

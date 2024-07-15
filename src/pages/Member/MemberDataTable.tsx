@@ -14,7 +14,8 @@ import DropdownSearch from '../../components/Dropdowns/DropdownSearch';
 const MemberDataTable = ({
   column,
   tableData,
-  onSearch
+  onSearch,
+  deleteHandler,
  }) => {
 
   const columns = useMemo(() => column, []);
@@ -63,7 +64,7 @@ const MemberDataTable = ({
 
   const detailsHandler = (id) => {};
   const editHandler = (id) => {};
-  const deleteHandler = (id) => {};
+  // const deleteHandler = (id) => {};
 
   const searchOptions = [
     {
