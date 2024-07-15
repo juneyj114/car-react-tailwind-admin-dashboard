@@ -204,12 +204,12 @@ const MemberDataTable = ({
                     <span>수정</span>
                   </div>
                 </th>
-                
+                 */}
                 <th colSpan={1} role='columnheader' key={headerGroup.headers.length+2}>
                   <div className="flex items-center justify-center" >
                     <span>삭제</span>
                   </div>
-                </th> */}
+                </th>
                 
             </tr>
           ))}

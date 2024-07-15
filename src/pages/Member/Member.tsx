@@ -38,7 +38,7 @@ const Member: React.FC = () => {
   const [memberData, setMemberData] = useState<Pageable<Member[]>>();
   const pageSize = useRecoilValue(pageSizeState);
   const pageNumber = useRecoilValue(pageNumberState);
-  
+
   const memberUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_MEMBER_ENDPOINT;
 
   const getAllMember = async () => {
@@ -55,17 +55,17 @@ const Member: React.FC = () => {
           regEndDate: '2100-12-31',
           applyStartDate: '',
           applyEndDate: ''
-          
+
         }
       });
-      const memberDataWithoutDate: Member[]  = response.data.content;
+      const memberDataWithoutDate: Member[] = response.data.content;
       const memberDateWithDate = memberDataWithoutDate.map((member) => {
         const applyDate = new Date(member.applyDate);
         member.applyDateYMD = `${applyDate.getFullYear()}-${formatTwoDigitPart(applyDate.getMonth() + 1)}-${formatTwoDigitPart(applyDate.getDate())} ${formatTwoDigitPart(applyDate.getHours())}:${formatTwoDigitPart(applyDate.getMinutes())}:${formatTwoDigitPart(applyDate.getMinutes())}`;
 
-        const registerDate = new Date(member.registerDate);        
+        const registerDate = new Date(member.registerDate);
         member.registerDateYMD = `${registerDate.getFullYear()}-${formatTwoDigitPart(registerDate.getMonth() + 1)}-${formatTwoDigitPart(registerDate.getDate())} ${formatTwoDigitPart(registerDate.getHours())}:${formatTwoDigitPart(registerDate.getMinutes())}:${formatTwoDigitPart(registerDate.getMinutes())}`;
-        
+
         return member;
       });
       const memberData: Pageable<Member[]> = response.data;
@@ -88,16 +88,16 @@ const Member: React.FC = () => {
 
   const apartmentColumns = [
     // { Header: 'ID', accessor: 'id'},
-    
-    { Header: '동', accessor: 'dong'},
-    { Header: '호', accessor: 'ho'},
-    { Header: '계정', accessor: 'userId'},
-    { Header: '신청일시', accessor: 'registerDateYMD'},
-    { Header: '승인일시', accessor: 'applyDateYMD'},
-    { Header: '에러 수신 여부', accessor: 'memberNotificationEntity.error'},
-    { Header: '공지사항 수신 여부', accessor: 'memberNotificationEntity.notice'},
-    { Header: '차량 정보 수신 여부', accessor: 'memberNotificationEntity.car'},
-    { Header: '세대 승인 수신 여부', accessor: 'memberNotificationEntity.apartment'},
+
+    { Header: '동', accessor: 'dong' },
+    { Header: '호', accessor: 'ho' },
+    { Header: '계정', accessor: 'userId' },
+    { Header: '신청일시', accessor: 'registerDateYMD' },
+    { Header: '승인일시', accessor: 'applyDateYMD' },
+    { Header: '에러 수신 여부', accessor: 'memberNotificationEntity.error' },
+    { Header: '공지사항 수신 여부', accessor: 'memberNotificationEntity.notice' },
+    { Header: '차량 정보 수신 여부', accessor: 'memberNotificationEntity.car' },
+    { Header: '세대 승인 수신 여부', accessor: 'memberNotificationEntity.apartment' },
     // { Header: '기타 수신 여부', accessor: 'memberNotificationEntity.etc'},
   ];
 
@@ -107,9 +107,9 @@ const Member: React.FC = () => {
       <div className="flex flex-col gap-5 md:gap-7 2xl:gap-10">
         {loading ? (
           <Loader />
-        ) : (
-          <MemberDataTable tableData={memberData.content} column={apartmentColumns} onSearch={() => {}}/>
-        )}
+        ) : memberData && memberData.content.length > 0 ? (
+          <MemberDataTable tableData={memberData.content} column={apartmentColumns} onSearch={() => { }} />
+        ) : null}
       </div>
     </DefaultLayout>
   );
