@@ -235,11 +235,11 @@ const MemberDataTable = ({
                 
                 <td role='row' key={page.length+1} onClick={() => editHandler(row.original['id'])}>
                   <ModalEdit/>
-                </td>
+                </td> */}
                 
                 <td role='row' key={page.length+2}>
                   <ModalDelete deleteHandler={deleteHandler} deleteData={row.cells} deleteId={row.original['id']}/>
-                </td> */}
+                </td>
                 
               </tr>
             );
