@@ -188,6 +188,7 @@ const ModalSave: React.FC = () => {
       Authorization: cookies.accessToken
     };
     let saveUrl = import.meta.env.VITE_BASE_URL;
+    
     switch (pathname) {
       case '/admin/apartment':
         saveUrl = saveUrl + import.meta.env.VITE_APARTMENT_ENDPOINT;
@@ -205,24 +206,19 @@ const ModalSave: React.FC = () => {
         break;
       case '/car':
         saveUrl = saveUrl + import.meta.env.VITE_CAR_ENDPOINT;
-        // console.log(saveUrl);
         willSaveData = {};
-        // console.log(saveData);
         saveData.forEach((data) => {
-          // console.log(`${data.key} / ${data.value} / ${data.optional}`);
           if (!data.optional && !data.value) {
             alert(`${data.label}는/은 필수값입니다.`);
             return;
           }
           willSaveData[data.key] = data.value;
         });
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 1000);
         break;
       case '/notice':
         saveUrl = saveUrl + import.meta.env.VITE_NOTICE_ENDPOINT;
         const tempSaveData = {};
+        willSaveData = {};
         const formData = new FormData();
         saveData.forEach((data) => {
           if (data.key === 'files' && data.value) {
@@ -233,27 +229,30 @@ const ModalSave: React.FC = () => {
             tempSaveData[data.key] = data.value;
           }
         });
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000);
         formData.append('request', new Blob([JSON.stringify(tempSaveData)], { type: "application/json" }));
         willSaveData = formData;
-
-        // console.log(headers);
         break;
       default:
         break;
     }
-
-    // console.log(willSaveData);
-
-    const response = await axios.post(saveUrl, willSaveData, {
-      headers: headers
-    });
-
-    closeModal();
+  
+    try {
+      const response = await axios.post(saveUrl, willSaveData, {
+        headers: headers
+      });
+  
+      if (response.status === 200) {
+        // 저장이 성공적으로 완료되면 페이지 새로고침
+        window.location.reload();
+      } else {
+        console.error('저장 실패:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Fetch 에러:', error);
+    } finally {
+      closeModal();
+    }
   };
-
   const handleDateChange = (index, value) => {
     const inputDate = value;
     const tempSaveEditData = [...saveData];
