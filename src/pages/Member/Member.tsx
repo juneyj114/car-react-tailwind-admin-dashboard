@@ -40,6 +40,7 @@ const Member: React.FC = () => {
   const pageNumber = useRecoilValue(pageNumberState);
 
   const memberUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_MEMBER_ENDPOINT;
+  const deleteMemberUrl = import.meta.env.VITE_BASE_URL + '/api/v1/member'; 
 
   const getAllMember = async () => {
     try {
@@ -87,7 +88,7 @@ const Member: React.FC = () => {
   };
 
   const deleteHandler = async (id) => {
-    const deleteUrl = memberUrl + `/${id}`
+    const deleteUrl = deleteMemberUrl + `/${id}`
     const response = await axios.delete(deleteUrl , {
       headers: {
         Authorization: cookies.accessToken
