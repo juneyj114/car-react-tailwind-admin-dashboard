@@ -8,6 +8,7 @@ import { Pageable } from '../../types/pageable.ts';
 import AddUnitCarModal from './AddUnitCarModal.tsx';
 import UnregonizedCarModal from './UnrecognizedCarModal.tsx';
 import Refresh from '../../images/icon/refresh.png';
+import SelectSaveCarTypeModal from './SelectSaveCarTypeModal.tsx';
 
 interface CarUnit {
   totalCount: number;
@@ -329,6 +330,8 @@ const ApartmentUnitCar: React.FC = () => {
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                       onClick={handleSearch}
+                      clipRule="evenodd"
+                      fillRule="evenodd"
                     >
                       <path
                         fillRule="evenodd"
@@ -388,20 +391,20 @@ const ApartmentUnitCar: React.FC = () => {
                                     // key={index}
                                     >
                                       <div className="flex-1 flex justify-center px-1"
-                                        // onClick={(e) => {
-                                        //   e.stopPropagation();
-                                        //   openModal({ id: s.id, vehicleNumber: s.vehicleNumber });
-                                        //   selectVehicleHandle(s);
-                                        // }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          openModal({ id: s.id, vehicleNumber: s.vehicleNumber });
+                                          selectVehicleHandle(s);
+                                        }}
                                       >
                                         {searchData ? fillColorNumber(s.vehicleNumber) : s.vehicleNumber}
                                         {/* <span className='text-xs text-slate-400 pt-0.5 pl-1'>({s.addition.length})</span> */}
                                       </div>
                                       <svg
-                                        clip-rule="evenodd"
-                                        fill-rule="evenodd"
-                                        stroke-linejoin="round"
-                                        stroke-miterlimit="2"
+                                        clipRule="evenodd"
+                                        fillRule="evenodd"
+                                        strokeLinejoin="round"
+                                        strokeMiterlimit="2"
                                         viewBox="0 0 24 24"
                                         width="14"
                                         height="14"

@@ -156,7 +156,7 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ vehicleId, vehic
                     className="w-1/2 rounded border border-stroke bg-gray p-3 text-center font-medium text-black transition hover:border-meta-1 hover:bg-meta-1 hover:text-white dark:border-strokedark dark:bg-meta-4 dark:text-white dark:hover:border-meta-1 dark:hover:bg-meta-1"
                     onClick={closeModal}
                 >
-                    취소
+                    닫기
                 </button>
             </div>
         </div >
