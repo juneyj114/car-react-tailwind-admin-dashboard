@@ -3,7 +3,9 @@ import React, { useState, useEffect, useRef } from 'react';
 const AddUnitCarModal = ({
   dong,
   ho,
-  addHandler
+  vehicle,
+  addHandler,
+  UnrecognizedAddHandler
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [vehicleNumber, setVehicleNumber] = useState<string>('');
@@ -51,7 +53,7 @@ const AddUnitCarModal = ({
   const addUnrecognizedCar = () => {
     if (checkValidUnrecognized()) {
       if (confirm(`미인식 차량 ${unrecognizedVehicleNumber}을 등록하시겠습니까?`)) {
-        addHandler(unrecognizedVehicleNumber, '');
+        UnrecognizedAddHandler(unrecognizedVehicleNumber, '');
       }
     }
   };

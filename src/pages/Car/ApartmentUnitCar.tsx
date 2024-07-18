@@ -44,6 +44,11 @@ interface AddUnitCar {
   phone: string;
 }
 
+interface AddUnregonizedCar {
+  unitId: number;
+  vehicleNumber: string;
+}
+
 const ApartmentUnitCar: React.FC = () => {
   const [inboxSidebarToggle, setInboxSidebarToggle] = useState(false);
   const [loading, setLoading] = useState<boolean>(true);
@@ -154,6 +159,29 @@ const ApartmentUnitCar: React.FC = () => {
       } finally {
         getCarUnitDongData(currentDong);
       }
+    }
+  };
+
+  const addUnrecognizedCarHandler = async (unitId, vehicleNumber) => {
+    // console.log(unitId);
+    const AddUnregonizedCar: AddUnregonizedCar = {
+      unitId,
+      vehicleNumber,
+    };
+
+    // console.log(addUnitCar);
+
+    try {
+      const response = await axios.post(carUnitDongUrl, AddUnregonizedCar, {
+        headers: {
+          Authorization: cookies.accessToken
+        }
+      });
+      // console.log(response);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      getCarUnitDongData(currentDong);
     }
   };
 
@@ -435,7 +463,13 @@ const ApartmentUnitCar: React.FC = () => {
                               } */}
                             </div>
                             <div className='mr-10'>
-                              <AddUnitCarModal dong={currentDong} ho={vehicles.ho} addHandler={(vehicleNumber, phone) => { addUnitCarHandler(vehicles.unitId, vehicleNumber, phone) }} />
+                              <AddUnitCarModal 
+                              dong={currentDong} 
+                              ho={vehicles.ho}
+                              vehicle={vehicles}
+                              addHandler={(unitId, vehicleNumber, phone) => { addUnitCarHandler(vehicles.unitId, vehicleNumber, phone)}}
+                              UnrecognizedAddHandler={(unitId, vehicleNumber) => { addUnrecognizedCarHandler(vehicles.unitId, vehicleNumber)}}
+                              />
                               {/* <button
                                 className='inline-flex rounded-lg border border-[#d5d5d5] py-1 px-6 text-sm font-medium hover:opacity-80 dark:text-white'
                                 // onClick={() => { delUnitCarHandler(vehicles) }}
