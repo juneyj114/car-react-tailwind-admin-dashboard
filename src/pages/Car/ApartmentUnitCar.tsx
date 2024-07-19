@@ -419,11 +419,11 @@ const ApartmentUnitCar: React.FC = () => {
                                     // key={index}
                                     >
                                       <div className="flex-1 flex justify-center px-1"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          openModal({ id: s.id, vehicleNumber: s.vehicleNumber });
-                                          selectVehicleHandle(s);
-                                        }}
+                                        // onClick={(e) => {
+                                        //   e.stopPropagation();
+                                        //   openModal({ id: s.id, vehicleNumber: s.vehicleNumber });
+                                        //   selectVehicleHandle(s);
+                                        // }}
                                       >
                                         {searchData ? fillColorNumber(s.vehicleNumber) : s.vehicleNumber}
                                         {/* <span className='text-xs text-slate-400 pt-0.5 pl-1'>({s.addition.length})</span> */}
@@ -466,7 +466,7 @@ const ApartmentUnitCar: React.FC = () => {
                               <AddUnitCarModal
                                 dong={currentDong}
                                 ho={vehicles.ho}
-                                vehicle={vehicles}
+                                // vehicle={vehicles}
                                 addHandler={(vehicleNumber, phone) => { addUnitCarHandler(vehicles.unitId, vehicleNumber, phone) }}
                               />
                               {/* <button
