@@ -73,9 +73,17 @@ const ModalEdit: React.FC = () => {
         break;
       case '/car':
         updateUrl = updateUrl + import.meta.env.VITE_CAR_ENDPOINT;
+        console.log(editableEditData, '뭐임?');
+        
         editableEditData.forEach((data) => {
-          if (['number', 'purpose', 'phone', 'startDate', 'endDate', 'type'].includes(data.key)) {
-            willUpdateData[data.key] = data.value;
+          if (['vehicleNumber', 'purpose', 'phone', 'startDate', 'endDate', 'type'].includes(data.key)) {
+            // 시간이 없어서 임의로 급하게 넣은 것 => 보시면 제대로 수정바람
+            // 데이터의 key는 vehicleNumber인데 postman에서 보면 통신을 할때 number로 보내야 함.
+            if (data.key == 'vehicleNumber') {
+              willUpdateData['number'] = data.value;
+            } else {
+              willUpdateData[data.key] = data.value;
+            }
           }
         });
         break;
@@ -103,7 +111,7 @@ const ModalEdit: React.FC = () => {
         headers: headers
       });
       if (response.status === 200) {
-        alert('성공');
+        // alert('성공');
         // 업데이트된 데이터를 상태에 반영
         const updatedData = response.data;
         setEditableEditData(prevState =>
@@ -116,7 +124,7 @@ const ModalEdit: React.FC = () => {
         );
         window.location.reload();
       } else {
-        alert('실패');
+        // alert('실패');
         console.error('저장 실패:', response.statusText);
       }
     } catch (error) {
