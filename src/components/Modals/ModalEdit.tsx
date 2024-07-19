@@ -16,31 +16,14 @@ const ModalEdit: React.FC = () => {
   const location = useLocation();
   const trigger = useRef<any>(null);
   const modal = useRef<any>(null);
-  
+
   useEffect(() => {
     if (modalOpen && initialEditData.length > 0 && !isSetInitialEditData) {
       setEditableEditData([...initialEditData]);
       setIsSetInitialEditData(true);
     }
-  }, [initialEditData]);
+  }, [initialEditData, modalOpen]);
 
-  // close on click outside
-  // useEffect(() => {
-  //   const clickHandler = ({ target }: MouseEvent) => {
-  //     if (!modal.current) return;
-  //     if (
-  //       !modalOpen ||
-  //       modal.current.contains(target) ||
-  //       trigger.current.contains(target)
-  //     )
-  //       return;
-  //     closeModal();
-  //   };
-  //   document.addEventListener('click', clickHandler);
-  //   return () => document.removeEventListener('click', clickHandler);
-  // });
-
-  // close if the esc key is pressed
   useEffect(() => {
     const keyHandler = ({ keyCode }: KeyboardEvent) => {
       if (!modalOpen || keyCode !== 27) return;
@@ -62,7 +45,7 @@ const ModalEdit: React.FC = () => {
       convertedValue = value;
     }
 
-    tempUpdatedEditData[index] = {...tempUpdatedEditData[index], value: convertedValue};
+    tempUpdatedEditData[index] = { ...tempUpdatedEditData[index], value: convertedValue };
     setEditableEditData(tempUpdatedEditData);
   };
 
@@ -73,6 +56,10 @@ const ModalEdit: React.FC = () => {
 
   const updateHandler = async () => {
     const pathname = location.pathname;
+    let willUpdateData = {}; // Initialize willUpdateData here
+    let headers = {
+      Authorization: cookies.accessToken
+    };
     let updateUrl = import.meta.env.VITE_BASE_URL;
     switch (pathname) {
       case '/admin/apartment':
@@ -86,26 +73,57 @@ const ModalEdit: React.FC = () => {
         break;
       case '/car':
         updateUrl = updateUrl + import.meta.env.VITE_CAR_ENDPOINT;
+        editableEditData.forEach((data) => {
+          if (['number', 'purpose', 'phone', 'startDate', 'endDate', 'type'].includes(data.key)) {
+            willUpdateData[data.key] = data.value;
+          }
+        });
         break;
       case '/notice':
         updateUrl = updateUrl + import.meta.env.VITE_NOTICE_ENDPOINT;
+        // Extract only the required fields
+        editableEditData.forEach((data) => {
+          if (['title', 'content'].includes(data.key)) {
+            willUpdateData[data.key] = data.value;
+          }
+        });
         break;
       default:
+        // Populate willUpdateData with all fields for other cases
+        editableEditData.forEach((data) => {
+          willUpdateData[data.key] = data.value;
+        });
         break;
     }
 
-    const willUpdateData = {};
-    editableEditData.forEach((data) => {
-      willUpdateData[data.key] = data.value;
-    });
-    // console.log(willUpdateData);
-    const response = await axios.put(`${updateUrl}/${willUpdateData['id']}`, willUpdateData, {
-      headers: {
-        Authorization: cookies.accessToken
+    try {
+      console.log(willUpdateData, '전송할 데이터');
+      const id = initialEditData.find(data => data.key === 'id').value;
+      const response = await axios.put(`${updateUrl}/${id}`, willUpdateData, {
+        headers: headers
+      });
+      if (response.status === 200) {
+        alert('성공');
+        // 업데이트된 데이터를 상태에 반영
+        const updatedData = response.data;
+        setEditableEditData(prevState =>
+          prevState.map(data => {
+            if (data.key in updatedData) {
+              return { ...data, value: updatedData[data.key] };
+            }
+            return data;
+          })
+        );
+        window.location.reload();
+      } else {
+        alert('실패');
+        console.error('저장 실패:', response.statusText);
       }
-    });
-    
-    closeModal();
+    } catch (error) {
+      console.error('Fetch 에러:', error);
+    } finally {
+      closeModal();
+    }
   };
 
   return (
@@ -118,23 +136,15 @@ const ModalEdit: React.FC = () => {
         Edit
       </button>
       <div
-        className={`fixed left-0 top-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5 ${
-          modalOpen ? 'block' : 'hidden'
-        }`}
+        className={`fixed left-0 top-0 z-999999 flex h-full min-h-screen w-full items-center justify-center bg-black/90 px-4 py-5 ${modalOpen ? 'block' : 'hidden'}`}
       >
-        <div 
+        <div
           ref={modal}
           onFocus={() => setModalOpen(true)}
           className="max-h-full overflow-auto w-100 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark"
         >
-          {/* <div className="border-b border-stroke px-6.5 py-4 dark:border-strokedark">
-            <h3 className="font-medium text-black text-lg dark:text-white">
-              상세
-            </h3>
-          </div> */}
           <form action="#">
             <div className="p-6.5">
-
               {editableEditData.map((data, index) => {
                 return data.visable ? (
                   <div className="mb-5 grid grid-cols-3 flex items-center gap-4" key={index}>
@@ -157,7 +167,8 @@ const ModalEdit: React.FC = () => {
                             rows={6}
                             placeholder=""
                             className="w-full rounded border-[1.5px] border-stroke bg-transparent px-5 py-3 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary col-span-2"
-                            defaultValue={data.value}
+                            value={data.value}
+                            onChange={(e) => handleChange(index, e.target.value, e.target.type)}
                           ></textarea>
                         )}
                         {data.valueType === ValueType.Number && (
@@ -170,7 +181,7 @@ const ModalEdit: React.FC = () => {
                           />
                         )}
                         {data.valueType === ValueType.SelectGroup && (
-                          <SelectGroup selectGroupValues={data.selectGroupValues} saveData={editableEditData} setSaveData={setEditableEditData} saveKey={data.key}/>
+                          <SelectGroup selectGroupValues={data.selectGroupValues} saveData={editableEditData} setSaveData={setEditableEditData} saveKey={data.key} />
                         )}
                         {data.valueType === ValueType.Boolean && (
                           <div>
@@ -201,8 +212,8 @@ const ModalEdit: React.FC = () => {
                       <span className="text-left col-span-2 px-5 py-3">{data.value}</span>
                     )}
                   </div>
-                ) : null
-              })}                
+                ) : null;
+              })}
               <div className="-mx-3 flex flex-wrap gap-y-4">
                 <div className="2xsm:w-1/2 w-full px-3">
                   <button

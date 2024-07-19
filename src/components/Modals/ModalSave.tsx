@@ -243,6 +243,7 @@ const ModalSave: React.FC = () => {
   
       if (response.status === 200) {
         // 저장이 성공적으로 완료되면 페이지 새로고침
+        alert("성공");
         window.location.reload();
       } else {
         console.error('저장 실패:', response.statusText);

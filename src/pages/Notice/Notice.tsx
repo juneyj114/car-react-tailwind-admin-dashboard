@@ -12,7 +12,6 @@ import { DetailsData, detailsDataState } from '../../state/atoms/detailsDataStat
 import { EditData, editDataState } from '../../state/atoms/editDataState.ts';
 import { ValueType } from '../../common/Enum/valueType.tsx';
 import ModalSave from '../../components/Modals/ModalSave.tsx';
-import { AllApartmentParams, ApartmentData } from '../../types/apartment.ts';
 import { Pageable } from '../../types/pageable.ts';
 
 interface NoticeData {
@@ -57,7 +56,7 @@ const Notice: React.FC = () => {
 
   useEffect(() => {
     getAllNotice();
-  }, []);
+  }, [pageNumber, pageSize]);
 
   const noticeColumns = [
     { Header: 'ID', accessor: 'id' },
@@ -118,7 +117,7 @@ const Notice: React.FC = () => {
 
       setDetailsData(noticeDetailsData);
     } catch (error) {
-
+      console.error('Error fetching notice details:', error);
     }
   };
 
@@ -169,22 +168,22 @@ const Notice: React.FC = () => {
         }
         apartmentEditData.push(editData);
       });
+      
       setEditData(apartmentEditData);
+      console.log(apartmentEditData, 'edit data');
     } catch (error) {
-
+      console.error("Error fetching notice details for edit:", error);
     }
   };
 
   const deleteHandler = async (id) => {
     const deleteUrl = `${noticeUrl}/${id}`;
     try {
-      const response = await axios.delete(deleteUrl, {
+      await axios.delete(deleteUrl, {
         headers: {
           Authorization: cookies.accessToken
         }
       });
-      // console.log(response);
-      // getAllNotice();
 
       setTimeout(() => {
         window.location.reload();
