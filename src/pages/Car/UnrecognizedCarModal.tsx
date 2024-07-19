@@ -31,55 +31,6 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ vehicleId, vehic
     const trigger = useRef<any>(null);
     const modal = useRef<any>(null);
 
-    const unrecognizedCarAddUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_UNRECOGNIZED_CAR_ADD_ENDPOINT;
-    const unrecognizedCarDelUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_DONG_ENDPOINT;
-
-    const addUnrecognizedCarHandler = async () => {
-        setLoading(true);
-        const AddUnrecognizedCar: AddUnrecognizedCar = {
-            vehicleId,
-            vehicleNumber: unrecognizedVehicleNumber,
-        };
-
-        try {
-            const response = await axios.post(unrecognizedCarAddUrl, AddUnrecognizedCar, {
-                headers: {
-                    Authorization: cookies.accessToken
-                }
-            });
-            if (response.status === 200) {
-                setAdditionalVehicles(prevState => [...prevState, { id: response.data.id, number: unrecognizedVehicleNumber }]);
-                alert('미인식 차량이 성공적으로 등록되었습니다.');
-                setUnrecognizedVehicleNumber('');
-            }
-        } catch (error) {
-            alert('Error fetching data:' + error);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    const delUnrecognizedCarHandler = async (id, number) => {
-        if (confirm(`${number}차량을 삭제하시겠습니까?`)) {
-            setLoading(true);
-            const deleteUrl = unrecognizedCarDelUrl + `/${id}`;
-            try {
-                const response = await axios.delete(deleteUrl, {
-                    headers: {
-                        Authorization: cookies.accessToken
-                    }
-                });
-                setAdditionalVehicles(prevState => prevState.filter(vehicle => vehicle.id !== id));
-                alert(response.data);
-            } catch (error) {
-                alert('Error deleting unrecognized car: ' + error);
-            } finally {
-                setLoading(false);
-            }
-        }
-        // setAdditionalVehicles(prevState => [...prevState, { id: , number:  }]);
-    };
-
     // close on click outside
     useEffect(() => {
         const clickHandler = (event: MouseEvent) => {
@@ -90,12 +41,6 @@ const UnrecognizedCarModal: React.FC<UnrecognizedCarProps> = ({ vehicleId, vehic
         document.addEventListener('mousedown', clickHandler);
         return () => document.removeEventListener('mousedown', clickHandler);
     }, [modalOpen, closeModal]);
-
-    const addUnrecognizedCar = () => {
-        if (checkValid()) {
-            addUnrecognizedCarHandler();
-        }
-    };
 
     const checkValid = () => {
         if (!vehicleNumber) {

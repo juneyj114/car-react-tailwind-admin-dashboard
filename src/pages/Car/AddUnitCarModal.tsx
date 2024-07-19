@@ -1,20 +1,44 @@
 import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import { useCookies } from 'react-cookie';
+
+interface UnrecognizedCarProps {
+  vehicleId: number;
+  vehicleNumber: string;
+  additionalVehicleNumbers: Addition[];
+  closeModal: any;
+}
+
+interface Addition {
+  id: number;
+  number: string;
+}
+
+interface AddUnrecognizedCar {
+  vehicleId: number;
+  vehicleNumber: string;
+}
 
 const AddUnitCarModal = ({
   dong,
   ho,
   vehicle,
   addHandler,
-  UnrecognizedAddHandler
+  // addUnrecognizedHandler
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [vehicleNumber, setVehicleNumber] = useState<string>('');
   const [unrecognizedVehicleNumber, setUnrecognizedVehicleNumber] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [activeTab, setActiveTab] = useState<string>('차량 추가');
+  const [selectedVehicleId, setSelectedVehicleId] = useState<string>('');
+  const [cookies] = useCookies(['accessToken', 'refreshToken']);
 
   const trigger = useRef<any>(null);
   const modal = useRef<any>(null);
+
+  // 미인식 차량 번호 api
+  const unrecognizedCarAddUrl = import.meta.env.VITE_BASE_URL + import.meta.env.VITE_CAR_UNIT_UNRECOGNIZED_CAR_ADD_ENDPOINT;
 
   // close on click outside
   useEffect(() => {
@@ -50,14 +74,6 @@ const AddUnitCarModal = ({
     }
   };
 
-  const addUnrecognizedCar = () => {
-    if (checkValidUnrecognized()) {
-      if (confirm(`미인식 차량 ${unrecognizedVehicleNumber}을 등록하시겠습니까?`)) {
-        UnrecognizedAddHandler(unrecognizedVehicleNumber, '');
-      }
-    }
-  };
-
   const checkValid = () => {
     if (!vehicleNumber) {
       alert('차량번호를 입력해주세요.');
@@ -67,21 +83,71 @@ const AddUnitCarModal = ({
     }
   };
 
+  const addUnrecognizedCarHandler = async () => {
+    if (checkValidUnrecognized()) {
+      const unrecognizedCarData = {
+        vehicleId: selectedVehicleId,
+        vehicleNumber: unrecognizedVehicleNumber,
+      };      
+      try {
+        const response = await axios.post(unrecognizedCarAddUrl, unrecognizedCarData, {
+          headers: {
+            Authorization: cookies.accessToken
+          }
+        });
+        if (response.status === 200) {
+          alert('미인식 차량번호가 성공적으로 등록되었습니다.');
+          closeModal();
+          window.location.reload();
+        }
+      } catch (error) {
+        alert('Error fetching data:' + error);
+      }
+    }
+  };
+  // const addUnrecognizedCarHandler = async () => {
+  //   const AddUnrecognizedCar: AddUnrecognizedCar = {
+  //     vehicleId: selectedVehicleId,
+  //     vehicleNumber: unrecognizedVehicleNumber,
+  //   };
+
+  //   try {
+  //     const response = await axios.post(unrecognizedCarAddUrl, AddUnrecognizedCar, {
+  //       headers: {
+  //         Authorization: cookies.accessToken
+  //       }
+  //     });
+  //     if (response.status === 200) {
+  //       setAdditionalVehicles(prevState => [...prevState, { id: response.data.id, number: unrecognizedVehicleNumber }]);
+  //       alert('미인식 차량이 성공적으로 등록되었습니다.');
+  //       setUnrecognizedVehicleNumber('');
+  //     }
+  //   } catch (error) {
+  //     alert('Error fetching data:' + error);
+  //   }
+  // };
+
   const checkValidUnrecognized = () => {
+    if (!selectedVehicleId) {
+      alert('미인식 차량번호를 등록할 차량번호를 선택해주세요.');
+      return false;
+    }
     if (!unrecognizedVehicleNumber) {
       alert('미인식 차량번호를 입력해주세요.');
       return false;
-    } else {
-      return true;
     }
+    return true;
   };
 
   const closeModal = () => {
     setVehicleNumber('');
     setUnrecognizedVehicleNumber('');
     setPhone('');
+    setSelectedVehicleId('');
     setModalOpen(false);
   };
+
+  console.log(vehicle, "뭐지..?");
 
   return (
     <div>
@@ -153,6 +219,24 @@ const AddUnitCarModal = ({
               <>
                 <div className='p-4'>
                   <div className="w-full mb-5 grid grid-cols-3 flex items-center gap-4">
+                    {vehicle.vehicleNumber.map((v) => (
+                      <div key={v.id} className='col-span-1'>
+                        <input
+                          type="radio"
+                          id={`unrecognized-${v.id}`}
+                          name="unrecognizedVehicle"
+                          value={v.id}
+                          onChange={(e) => setSelectedVehicleId(e.target.value)}
+                          // onChange={(e) => setUnrecognizedVehicleNumber(e.target.value)}
+                          className="mr-2"
+                        />
+                        <label htmlFor={`unrecognized-${v.id}`} className="text-black dark:text-white">
+                          {v.vehicleNumber}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="w-full mb-5 grid grid-cols-3 flex items-center gap-4">
                     <label className="block text-sm font-medium text-black dark:text-white col-span-1">
                       미인식 차량번호 <span className="text-meta-1">*</span>
                     </label>
@@ -180,7 +264,7 @@ const AddUnitCarModal = ({
               ) : (
                 <button
                   className="block w-full rounded border border-primary bg-primary p-3 text-center font-medium text-white transition hover:bg-opacity-90"
-                  onClick={addUnrecognizedCar}
+                  onClick={addUnrecognizedCarHandler}
                 >
                   등록
                 </button>)}

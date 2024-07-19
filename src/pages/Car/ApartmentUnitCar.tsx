@@ -463,12 +463,11 @@ const ApartmentUnitCar: React.FC = () => {
                               } */}
                             </div>
                             <div className='mr-10'>
-                              <AddUnitCarModal 
-                              dong={currentDong} 
-                              ho={vehicles.ho}
-                              vehicle={vehicles}
-                              addHandler={(unitId, vehicleNumber, phone) => { addUnitCarHandler(vehicles.unitId, vehicleNumber, phone)}}
-                              UnrecognizedAddHandler={(unitId, vehicleNumber) => { addUnrecognizedCarHandler(vehicles.unitId, vehicleNumber)}}
+                              <AddUnitCarModal
+                                dong={currentDong}
+                                ho={vehicles.ho}
+                                vehicle={vehicles}
+                                addHandler={(vehicleNumber, phone) => { addUnitCarHandler(vehicles.unitId, vehicleNumber, phone) }}
                               />
                               {/* <button
                                 className='inline-flex rounded-lg border border-[#d5d5d5] py-1 px-6 text-sm font-medium hover:opacity-80 dark:text-white'
